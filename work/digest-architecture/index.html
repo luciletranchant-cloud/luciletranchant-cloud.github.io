@@ -5,18 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>An executive-readout architecture for monitoring digests, Lucile Tranchant</title>
 <meta name="description" content="System design: a config-driven, multi-deployment monitoring engine where tier assignment is computed deterministically in code and the model writes analysis but never decides what matters.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Lucile Tranchant">
-<meta property="og:title" content="Turning monitoring noise into a 90-second executive readout — Lucile Tranchant">
-<meta property="og:description" content="A config-driven, multi-deployment monitoring engine that leads with the conclusion. Tier assignment decided in code, never by the model.">
-<meta property="og:url" content="https://luciletranchant.com/work/digest-architecture/">
-<meta property="og:image" content="https://luciletranchant.com/assets/og.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Turning monitoring noise into a 90-second executive readout — Lucile Tranchant">
-<meta name="twitter:description" content="A config-driven, multi-deployment monitoring engine that leads with the conclusion. Tier assignment decided in code, never by the model.">
-<meta name="twitter:image" content="https://luciletranchant.com/assets/og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,6 +34,33 @@
     <p class="eyebrow">Work, System Design</p>
     <h1>An executive-readout architecture for monitoring digests</h1>
     <p class="lede">A config-driven, multi-deployment monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">How it decides</span>
+        <span class="section-note">Watch one signal move through the gate</span>
+      </div>
+      <div class="gatesim" aria-label="Animated diagram: code scores and routes each signal; the model only writes analysis">
+        <div class="gs-head">
+          <span class="t">Deterministic routing · live</span>
+          <span class="h">Code assigns the tier, the model only writes</span>
+        </div>
+        <div class="gs-scroll">
+          <div class="gs-track">
+            <div class="gs-in" aria-hidden="true"></div>
+            <div class="gs-inlbl">Signal in</div>
+            <div class="gs-gate" aria-hidden="true">
+              <div class="g1">Gate</div>
+              <div class="g2">code · not the model</div>
+            </div>
+            <div class="gs-lane pri" aria-hidden="true"><span class="ll">Priority</span></div>
+            <div class="gs-lane wat" aria-hidden="true"><span class="ll">Standing watch</span></div>
+            <div class="gs-lane drop" aria-hidden="true"><span class="ll">Below the bar</span></div>
+          </div>
+        </div>
+        <div class="gs-status">Raw signal arrives, source, no verdict yet.</div>
+      </div>
+    </div>
 
     <div class="section label-col">
       <p class="eyebrow" style="padding-top:4px;">The design<br>problem</p>
@@ -109,33 +124,6 @@
 
     <div class="section">
       <div class="section-head">
-        <span class="eyebrow">How signals are routed</span>
-        <span class="section-note">Watch one signal move through the gate</span>
-      </div>
-      <div class="gatesim" aria-label="Animated diagram: code scores and routes each signal; the model only writes analysis">
-        <div class="gs-head">
-          <span class="t">Deterministic routing · live</span>
-          <span class="h">Code assigns the tier, the model only writes</span>
-        </div>
-        <div class="gs-scroll">
-          <div class="gs-track">
-            <div class="gs-in" aria-hidden="true"></div>
-            <div class="gs-inlbl">Signal in</div>
-            <div class="gs-gate" aria-hidden="true">
-              <div class="g1">Gate</div>
-              <div class="g2">code · not the model</div>
-            </div>
-            <div class="gs-lane pri" aria-hidden="true"><span class="ll">Priority</span></div>
-            <div class="gs-lane wat" aria-hidden="true"><span class="ll">Standing watch</span></div>
-            <div class="gs-lane drop" aria-hidden="true"><span class="ll">Below the bar</span></div>
-          </div>
-        </div>
-        <div class="gs-status">Raw signal arrives, source, no verdict yet.</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-head">
         <span class="eyebrow">Determinism first</span>
         <span class="section-note">The load-bearing decision</span>
       </div>
@@ -174,29 +162,6 @@
     <div class="section">
       <p class="provenance">Personal project · Python, GitHub Actions, Claude API · built in a Claude Code session from a written specification · repository private. Engineering write-up only, this page describes a system, not a service.</p>
       <p class="closing">Interested in the thinking behind this system? A code-and-prompt walkthrough is available on request. <a href="/contact/">Get in touch →</a></p>
-    </div>
-
-    <div class="morework">
-      <div class="mw-lbl">More work</div>
-      <div class="mw-grid">
-        <a class="mw-card" href="/case-study/">
-          <div class="mw-tag">Case study · flagship</div>
-          <div class="mw-t">Harmful-information detection &amp; triage pipelines</div>
-          <div class="mw-go">Read the case study →</div>
-        </a>
-        <a class="mw-card" href="/work/mirrorline/">
-          <div class="mw-tag">R&amp;D · Mirrorline</div>
-          <div class="mw-t">Auditing what AI assistants say about an organization</div>
-          <div class="mw-go">Read the approach →</div>
-        </a>
-
-        <a class="mw-card" href="/work/reputation-readout/">
-          <div class="mw-tag">Research &amp; insight</div>
-          <div class="mw-t">From fragmented signals to an executive reputation readout</div>
-          <div class="mw-go">Read the case study →</div>
-        </a>
-      </div>
-      <p class="mw-contact">Want the detail behind any of this? <a href="/contact/">Contact me →</a></p>
     </div>
 
   </div>
