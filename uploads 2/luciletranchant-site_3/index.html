@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucile Tranchant, Research, Narrative Intelligence &amp; Responsible AI</title>
+<meta name="description" content="Lucile Tranchant works in research, narrative intelligence and responsible AI: real-time social and media analysis, executive insights, harmful-information research, and the AI-assisted workflows behind them. At the IFRC.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="/">
+      <span class="diamond" aria-hidden="true"></span>
+      <span>Lucile Tranchant</span>
+    </a>
+    <nav class="site" aria-label="Site">
+      <a href="/#work">Work</a>
+      <a href="/about/">About</a>
+      <a href="/resume.pdf">Résumé</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <p class="eyebrow">Research, Narrative Intelligence &amp; Responsible AI</p>
+    <h1><span style="color:var(--ink)">I study how information moves, what audiences trust, and when narratives become risk.</span> <span style="color:var(--accent)">Then I turn those findings into decisions, policy and working systems.</span></h1>
+
+    <p class="proof"><b>3</b> production AI workflows · <b>50+</b> editions shipped · <b>30+</b> languages monitored · deterministic gating + human review</p>
+
+    <div class="section" style="margin-top:30px;">
+      <p>I lead communications monitoring and analysis at the <strong>International Federation of Red Cross and Red Crescent Societies (IFRC)</strong>, working across a global network of 191 National Societies, and previously worked on the digital intelligence team at <strong>UNICEF in New York</strong>. My work combines <strong>real-time social and media analysis</strong>, <strong>executive insights</strong>, measurement and <strong>harmful-information research</strong>, from understanding emerging narratives during emergencies to helping leadership make sense of complex reputation questions.</p>
+      <p>I also build AI-assisted research workflows when existing tools cannot answer the question well enough. My work sits between <strong>research, communications, policy and applied AI</strong>: finding the signal, testing what it means, and making it useful to the people who need to act.</p>
+    </div>
+
+    <p class="herolinks"><a href="#work">View selected work →</a><a href="/case-study/">Read the flagship case study →</a><a href="/contact/">Contact me →</a></p>
+
+    <div class="feed" aria-label="Illustrative live monitoring feed">
+      <div class="feed-head">
+        <span class="t"><span class="dot" aria-hidden="true"></span>Monitoring feed · illustrative</span>
+        <span class="live"><span class="n">3</span> flagged / <span class="n">10</span> scanned</span>
+      </div>
+      <div class="feed-view">
+        <div class="feed-fade top" aria-hidden="true"></div>
+        <div class="feed-scroll">
+          <div class="feed-row flag"><span class="tm">02:14</span><span class="ind" aria-hidden="true"></span><span class="src">s-4471</span><span class="nar">Fake “aid suspended” notice attributed to a relief agency</span><span class="st st-flag">flag</span></div>
+          <div class="feed-row"><span class="tm">02:09</span><span class="ind" aria-hidden="true"></span><span class="src">g-2210</span><span class="nar">Recurring allegation of misused disaster funds</span><span class="st st-watch">watch</span></div>
+          <div class="feed-row"><span class="tm">01:58</span><span class="ind" aria-hidden="true"></span><span class="src">r-0090</span><span class="nar">Routine press mention, neutral tone</span><span class="st st-clear">clear</span></div>
+          <div class="feed-row flag"><span class="tm">01:47</span><span class="ind" aria-hidden="true"></span><span class="src">s-5218</span><span class="nar">Donation-scam page impersonating an emergency appeal</span><span class="st st-flag">flag</span></div>
+        </div>
+        <div class="feed-fade" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="section" id="work">
+      <div class="section-head">
+        <span class="eyebrow">Selected Work</span>
+        <span class="section-note">Research, systems and methods · operational details redacted</span>
+      </div>
+      <div class="work-grid">
+        <a class="work-card" href="/case-study/">
+          <span class="tag">Case study · in production</span>
+          <h3>Keeping an LLM pipeline honest during a live public-health emergency</h3>
+          <p class="sub">Three automated harmful-information detection-and-triage pipelines on the Claude API, run daily through a live public-health emergency.</p>
+          <span class="go">Read the case study →</span>
+        </a>
+        <a class="work-card" href="/work/digest-architecture/">
+          <span class="tag">System design</span>
+          <h3>An executive-readout architecture for monitoring digests</h3>
+          <p class="sub">A config-driven, multi-deployment monitoring engine that leads with judgment, tier assignment decided in code, never by the model.</p>
+          <span class="go">Read the design →</span>
+        </a>
+        <a class="work-card" href="/work/mirrorline/">
+          <span class="tag">R&amp;D · in development · Mirrorline</span>
+          <h3>Auditing what AI assistants say about an organization</h3>
+          <p class="sub">Structured probes to AI assistants, audited against the public record. The divergence is the finding.</p>
+          <span class="go">Read the approach →</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  var scroll = document.querySelector('.feed-scroll');
+  if (!scroll) return;
+  var rows = [
+    { t: '02:14', s: 's-4471', n: 'Fake “aid suspended” notice attributed to a relief agency', flag: true,  st: 'flag' },
+    { t: '02:09', s: 'g-2210', n: 'Recurring allegation of misused disaster funds', flag: false, st: 'watch' },
+    { t: '01:58', s: 'r-0090', n: 'Routine press mention, neutral tone', flag: false, st: 'clear' },
+    { t: '01:47', s: 's-5218', n: 'Donation-scam page impersonating an emergency appeal', flag: true,  st: 'flag' },
+    { t: '01:31', s: 'r-3388', n: 'Out-of-date leadership claim resurfacing', flag: false, st: 'watch' },
+    { t: '01:20', s: 'g-1180', n: 'Volunteer recruitment post, on-message', flag: false, st: 'clear' },
+    { t: '01:05', s: 'd-7742', n: 'Miscaptioned photo from an unrelated event', flag: false, st: 'watch' },
+    { t: '00:52', s: 's-6605', n: 'Health rumor discouraging outbreak vaccination', flag: true,  st: 'flag' },
+    { t: '00:38', s: 'r-2091', n: 'Local-language post naming and targeting field staff', flag: true,  st: 'flag' },
+    { t: '00:19', s: 'g-3050', n: 'General situation update, corroborated', flag: false, st: 'clear' }
+  ];
+  function build() {
+    return rows.map(function (r) {
+      return '<div class="feed-row' + (r.flag ? ' flag' : '') + '">' +
+        '<span class="tm">' + r.t + '</span>' +
+        '<span class="ind" aria-hidden="true"></span>' +
+        '<span class="src">' + r.s + '</span>' +
+        '<span class="nar">' + r.n + '</span>' +
+        '<span class="st st-' + r.st + '">' + r.st + '</span></div>';
+    }).join('');
+  }
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  scroll.innerHTML = reduce ? build() : build() + build();
+  if (!reduce) scroll.style.animation = 'feedmarq 22s linear infinite';
+})();
+</script>
+
+
+<footer class="site">
+  <div class="wrap">
+    <span><a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
+    <span>© 2026 Lucile Tranchant</span>
+  </div>
+</footer>
+
+</body>
+</html>
