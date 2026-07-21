@@ -4,332 +4,240 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Turning monitoring noise into a 90-second executive readout, Lucile Tranchant</title>
-<meta name="description" content="System design: a config-driven, multi-deployment monitoring engine where tier assignment is computed deterministically in code and the model writes analysis but never decides what matters.">
+<meta name="description" content="A config-driven, multi-deployment monitoring engine that leads with the conclusion. Tier assignment decided in code, never by the model.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lucile Tranchant">
-<meta property="og:title" content="Turning monitoring noise into a 90-second executive readout — Lucile Tranchant">
+<meta property="og:title" content="Turning monitoring noise into a 90-second executive readout, Lucile Tranchant">
 <meta property="og:description" content="A config-driven, multi-deployment monitoring engine that leads with the conclusion. Tier assignment decided in code, never by the model.">
 <meta property="og:url" content="https://luciletranchant.com/work/digest-architecture/">
 <meta property="og:image" content="https://luciletranchant.com/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Turning monitoring noise into a 90-second executive readout — Lucile Tranchant">
+<meta name="twitter:title" content="Turning monitoring noise into a 90-second executive readout, Lucile Tranchant">
 <meta name="twitter:description" content="A config-driven, multi-deployment monitoring engine that leads with the conclusion. Tier assignment decided in code, never by the model.">
 <meta name="twitter:image" content="https://luciletranchant.com/assets/og.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css?v=3">
+<style>
+body{margin:0;background:#faf7f1;color:#1c1a17;font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:16px;line-height:1.65;}
+a{color:#c23c22;text-decoration:none}a:hover{color:#8f2a15}
+@keyframes lpulse{0%,100%{opacity:1}50%{opacity:.25}}
+</style>
 </head>
 <body>
+<div style="max-width:1020px;margin:0 auto;">
+  <header style="border-bottom:1.5px solid #1c1a17;padding:26px 24px 14px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;"><a href="/" style="display:flex;align-items:center;gap:10px;color:#1c1a17;"><span style="width:9px;height:9px;background:#c23c22;transform:rotate(45deg);display:inline-block;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:2.4px;text-transform:uppercase;">Lucile Tranchant</span></a><nav style="display:flex;gap:28px;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#33302a;"><a href="/#work" style="color:#c23c22;">Work</a><a href="/about/" style="color:#33302a;">About</a><a href="/resume.pdf" target="_blank" rel="noopener" style="color:#33302a;">R&eacute;sum&eacute;</a><a href="/contact/" style="color:#33302a;">Contact</a></nav></header>
+</div>
 
-<header class="masthead">
-  <div class="wrap">
-    <a class="wordmark" href="/">
-      <span class="diamond" aria-hidden="true"></span>
-      <span>Lucile Tranchant</span>
-    </a>
-    <nav class="site" aria-label="Site">
-      <a href="/#work" aria-current="page">Work</a>
-      <a href="/about/">About</a>
-      <a href="/resume.pdf" target="_blank" rel="noopener">Résumé</a>
-      <a href="/contact/">Contact</a>
-    </nav>
+<section style="padding:52px 0 40px;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#c23c22;margin:0;">Executive Intelligence &middot; System Design</p>
+  <h1 style="font-family:'IBM Plex Serif',serif;font-weight:500;font-size:clamp(30px,5vw,44px);line-height:1.12;letter-spacing:-.3px;margin:14px 0 0;max-width:17em;">Turning monitoring noise into a 90-second executive readout</h1>
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.2px;color:#6b6459;margin:14px 0 0;">An executive-readout architecture for monitoring digests.</p>
+  <p style="font-family:'IBM Plex Serif',serif;font-style:italic;font-size:19px;line-height:1.5;color:#5a5348;margin:16px 0 0;max-width:40em;">A config-driven, multi-deployment monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
+</div></section>
+
+<section style="background:#f2ede3;border-top:1px solid #e2dccf;border-bottom:1px solid #e2dccf;padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">The design problem</span><span style="height:1px;flex:1;background:#ddd7cb;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;color:#6b6459;">The quiet-day test</span></div>
+  <h2 style="font-family:'IBM Plex Serif',serif;font-size:clamp(22px,3vw,26px);font-weight:600;margin:18px 0 0;line-height:1.22;max-width:22em;">A reader with ninety seconds needs the conclusion first</h2>
+  <p style="font-size:16px;line-height:1.6;color:#33302a;margin:14px 0 0;max-width:46em;">Most automated digests are newsletters: a wall of story cards ranked by recency, with the actual judgment (<em>does anything here need attention?</em>) left to the reader.</p>
+  <p style="font-size:16px;line-height:1.6;color:#33302a;margin:1em 0 0;max-width:46em;">The hard case is the quiet day. A system that can honestly say <em>nothing crossed the bar today</em> earns the right to be read carefully when something does, so that case has its own test.</p>
+</div></section>
+
+<section style="padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">The output structure</span><span style="height:1px;flex:1;background:#ddd7cb;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;color:#6b6459;">One edition &middot; fixed order &middot; sample content</span></div>
+  <h2 style="font-family:'IBM Plex Serif',serif;font-size:clamp(22px,3vw,26px);font-weight:600;margin:18px 0 0;line-height:1.22;max-width:22em;">What one edition looks like, and why the order is fixed</h2>
+  <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:34px;align-items:start;margin-top:24px;">
+    <div style="background:#fff;border:1px solid #ddd7cb;box-shadow:0 12px 34px -22px rgba(28,26,23,.5);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid #eee6d8;padding:13px 18px;background:#f8f4ec;"><div><div style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:#a89f8d;">Subject</div><div style="font-size:13px;font-weight:600;margin-top:3px;">Monitoring Digest, Edition 47</div></div><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.5px;color:#6b6459;">TUE &middot; 06:00 &middot; daily</div></div>
+      <div style="padding:18px;display:flex;flex-direction:column;gap:18px;">
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Readout</div><div style="border-left:2.5px solid #c23c22;padding-left:15px;margin-top:9px;"><p style="font-family:'IBM Plex Serif',serif;font-size:16px;line-height:1.45;margin:0;">One item crossed the priority bar overnight; three on standing watch. All monitored sources reporting.</p></div></div>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:9px;">Priority finding <span style="color:#c23c22;">1</span></div>
+          <div style="border:1px solid #ddd7cb;border-left:2px solid #c23c22;padding:14px 15px;">
+            <p style="font-family:'IBM Plex Serif',serif;font-size:14.5px;line-height:1.42;margin:0 0 13px;">A coordinated set of posts misattributed a policy reversal to the organization, gaining traction on two regional networks overnight.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#c23c22;">What</span><span style="font-size:12.5px;line-height:1.5;color:#33302a;">~40 near-duplicate posts, in-language, first seen 02:10; amplified by two mid-size accounts.</span></div>
+              <div style="display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#c23c22;">Why</span><span style="font-size:12.5px;line-height:1.5;color:#33302a;">The claim is factually wrong and spreading; left alone it becomes the reference version within a day.</span></div>
+              <div style="display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Step</span><span style="font-size:12.5px;line-height:1.5;color:#33302a;">Publish a dated correction on the owned channel; brief regional spokespeople with the agreed line.</span></div>
+            </div>
+          </div>
+        </div>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;font-weight:600;margin-bottom:4px;">Standing watch</div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:grid;grid-template-columns:18px 1fr auto;gap:12px;align-items:baseline;padding:9px 0;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b6459;">01</span><span style="font-size:12.5px;line-height:1.48;color:#33302a;">Recurring narrative questioning funding allocation, stable volume, no new vectors.</span><span style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;color:#a89f8d;white-space:nowrap;">awareness</span></div>
+            <div style="display:grid;grid-template-columns:18px 1fr auto;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid #eee6d8;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b6459;">02</span><span style="font-size:12.5px;line-height:1.48;color:#33302a;">Low-level impersonation account, reported, awaiting platform action.</span><span style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;color:#a89f8d;white-space:nowrap;">tracking</span></div>
+            <div style="display:grid;grid-template-columns:18px 1fr auto;gap:12px;align-items:baseline;padding:9px 0;border-top:1px solid #eee6d8;"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#6b6459;">03</span><span style="font-size:12.5px;line-height:1.48;color:#33302a;">Sentiment dip after a leadership announcement, within normal range.</span><span style="font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.5px;text-transform:uppercase;color:#a89f8d;white-space:nowrap;">awareness</span></div>
+          </div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.7;color:#6b6459;border-top:1px solid #eee6d8;padding-top:12px;"><b style="color:#1c1a17;">Coverage.</b> Scanned: listening feed &middot; news API &middot; 6 regional RSS. <span style="color:#c23c22;">Dark: one social API (auth refresh pending)</span>, edition degraded visibly, not silently.</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:17px;">
+      <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c23c22;font-weight:600;">1</div><p style="font-size:13px;line-height:1.6;margin:0;color:#33302a;"><strong>Readout first.</strong> The conclusion leads; evidence follows. Ninety seconds is enough to know whether to act.</p></div>
+      <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c23c22;font-weight:600;">2</div><p style="font-size:13px;line-height:1.6;margin:0;color:#33302a;"><strong>What / why / step.</strong> Every priority finding carries all three, never an alert without a recommended move.</p></div>
+      <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c23c22;font-weight:600;">3</div><p style="font-size:13px;line-height:1.6;margin:0;color:#33302a;"><strong>Standing watch, not filler.</strong> Awareness items sit apart from action items, so the priority bar stays meaningful.</p></div>
+      <div style="display:grid;grid-template-columns:22px 1fr;gap:12px;"><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#c23c22;font-weight:600;">4</div><p style="font-size:13px;line-height:1.6;margin:0;color:#33302a;"><strong>Coverage note closes the loop.</strong> What was scanned and what went dark, the reader always knows the evidence base.</p></div>
+    </div>
   </div>
-</header>
+</div></section>
 
-<main>
-  <div class="wrap">
-
-    <p class="eyebrow">Executive Intelligence · System Design</p>
-    <h1>Turning monitoring noise into a 90-second executive readout</h1>
-    <p class="h1-second">An executive-readout architecture for monitoring digests.</p>
-    <p class="lede">A config-driven, multi-deployment monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">The design<br>problem</p>
-      <div>
-        <p>Most automated digests are newsletters: a wall of story cards ranked by recency, with the actual judgment, <em>does anything here need attention?</em>, left to the reader. A reader with ninety seconds needs the conclusion first.</p>
-        <p>The hard case is the quiet day. A system that can honestly say <em>nothing crossed the bar today</em> earns the right to be read carefully when something does, so that case has its own test.</p>
+<section style="background:#f2ede3;border-top:1px solid #e2dccf;border-bottom:1px solid #e2dccf;padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">How signals are routed</span><span style="height:1px;flex:1;background:#ddd7cb;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;color:#6b6459;">Watch one signal move through the gate</span></div>
+  <h2 style="font-family:'IBM Plex Serif',serif;font-size:clamp(22px,3vw,26px);font-weight:600;margin:18px 0 0;line-height:1.22;max-width:22em;">Code assigns the tier, the model only writes</h2>
+  <div style="margin-top:22px;border:1px solid #ddd7cb;background:#fff;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding:15px 18px;border-bottom:1px solid #eee6d8;background:#f8f4ec;"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#1c1a17;"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#c23c22;margin-right:8px;animation:lpulse 1.6s ease-in-out infinite;"></span>Deterministic routing &middot; live</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.4px;color:#c23c22;">Code assigns the tier, the model only writes</span></div>
+    <div style="overflow-x:auto;">
+      <div id="da-track" style="position:relative;height:252px;min-width:660px;">
+        <div style="position:absolute;left:3.5%;top:50%;transform:translateY(-50%);width:2px;height:130px;background:linear-gradient(#ddd7cb,transparent,#ddd7cb);"></div>
+        <div style="position:absolute;left:2%;top:8px;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;color:#6b6459;">Signal in</div>
+        <div style="position:absolute;left:41%;top:50%;transform:translate(-50%,-50%);width:122px;text-align:center;background:#1c1a17;color:#faf7f1;padding:15px 10px;border-radius:3px;z-index:3;"><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Gate</div><div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.5px;color:#f0885f;margin-top:5px;">code &middot; not the model</div></div>
+        <div style="position:absolute;left:58%;right:2%;height:1px;background:#ddd7cb;top:20%;z-index:1;"><span style="position:absolute;right:0;top:-18px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#c23c22;">Priority</span></div>
+        <div style="position:absolute;left:58%;right:2%;height:1px;background:#ddd7cb;top:50%;z-index:1;"><span style="position:absolute;right:0;top:-18px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#6b6459;">Standing watch</span></div>
+        <div style="position:absolute;left:58%;right:2%;height:1px;background:#ddd7cb;top:80%;z-index:1;"><span style="position:absolute;right:0;top:-18px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#a89f8d;">Below the bar</span></div>
       </div>
     </div>
-
-    <div class="section">
-      <div class="section-head">
-        <span class="eyebrow">The output structure</span>
-        <span class="section-note">One edition · fixed order · sample content</span>
-      </div>
-      <div class="anatomy">
-        <div class="edition" aria-label="Sample rendered edition">
-          <div class="ed-head">
-            <div>
-              <div class="tag">Subject</div>
-              <div class="subj">Monitoring Digest, Edition 47</div>
-            </div>
-            <div class="meta">TUE · 06:00 · daily</div>
-          </div>
-          <div class="ed-body">
-            <div class="ed-block">
-              <div class="msec-label">Readout</div>
-              <div class="readout"><p>One item crossed the priority bar overnight; three on standing watch. All monitored sources reporting.</p></div>
-            </div>
-            <div class="ed-block">
-              <div class="msec-label">Priority finding <span style="color:var(--accent);">1</span></div>
-              <div class="finding">
-                <p class="claim">A coordinated set of posts misattributed a policy reversal to the organization, gaining traction on two regional networks overnight.</p>
-                <div class="wxs">
-                  <div class="wxs-row"><span class="k">What</span><span class="v">~40 near-duplicate posts, in-language, first seen 02:10; amplified by two mid-size accounts.</span></div>
-                  <div class="wxs-row"><span class="k">Why</span><span class="v">The claim is factually wrong and spreading; left alone it becomes the reference version within a day.</span></div>
-                  <div class="wxs-row step"><span class="k">Step</span><span class="v">Publish a dated correction on the owned channel; brief regional spokespeople with the agreed line.</span></div>
-                </div>
-              </div>
-            </div>
-            <div class="ed-block">
-              <div class="msec-label">Standing watch</div>
-              <div class="watch">
-                <div class="watch-row"><span class="wn">01</span><span class="wt">Recurring narrative questioning funding allocation, stable volume, no new vectors.</span><span class="ws">awareness</span></div>
-                <div class="watch-row"><span class="wn">02</span><span class="wt">Low-level impersonation account, reported, awaiting platform action.</span><span class="ws">tracking</span></div>
-                <div class="watch-row"><span class="wn">03</span><span class="wt">Sentiment dip after a leadership announcement, within normal range.</span><span class="ws">awareness</span></div>
-              </div>
-            </div>
-            <div class="ed-block">
-              <div class="coverage"><b>Coverage.</b> Scanned: listening feed · news API · 6 regional RSS. <span class="dark">Dark: one social API (auth refresh pending)</span>, edition degraded visibly, not silently.</div>
-            </div>
-          </div>
-        </div>
-        <div class="annos">
-          <div class="anno"><div class="n">1</div><p><strong>Readout first.</strong> The conclusion leads; evidence follows. Ninety seconds is enough to know whether to act.</p></div>
-          <div class="anno"><div class="n">2</div><p><strong>What / why / step.</strong> Every priority finding carries all three, never an alert without a recommended move.</p></div>
-          <div class="anno"><div class="n">3</div><p><strong>Standing watch, not filler.</strong> Awareness items sit apart from action items, so the priority bar stays meaningful.</p></div>
-          <div class="anno"><div class="n">4</div><p><strong>Coverage note closes the loop.</strong> What was scanned and what went dark, the reader always knows the evidence base.</p></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-head">
-        <span class="eyebrow">How signals are routed</span>
-        <span class="section-note">Watch one signal move through the gate</span>
-      </div>
-      <div class="gatesim" aria-label="Animated diagram: code scores and routes each signal; the model only writes analysis">
-        <div class="gs-head">
-          <span class="t">Deterministic routing · live</span>
-          <span class="h">Code assigns the tier, the model only writes</span>
-        </div>
-        <div class="gs-scroll">
-          <div class="gs-track">
-            <div class="gs-in" aria-hidden="true"></div>
-            <div class="gs-inlbl">Signal in</div>
-            <div class="gs-gate" aria-hidden="true">
-              <div class="g1">Gate</div>
-              <div class="g2">code · not the model</div>
-            </div>
-            <div class="gs-lane pri" aria-hidden="true"><span class="ll">Priority</span></div>
-            <div class="gs-lane wat" aria-hidden="true"><span class="ll">Standing watch</span></div>
-            <div class="gs-lane drop" aria-hidden="true"><span class="ll">Below the bar</span></div>
-          </div>
-        </div>
-        <div class="gs-status">Raw signal arrives, source, no verdict yet.</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-head">
-        <span class="eyebrow">Determinism first</span>
-        <span class="section-note">The load-bearing decision</span>
-      </div>
-      <div class="quote-row">
-        <blockquote class="rule">
-          <p>"Tier assignment is computed in code, before any model call. The model writes the analysis for each tier, it never assigns the tier."</p>
-          <cite>,  the same rule as my <a href="/case-study/">harmful-information pipelines</a>: the model summarises what passes the gate; it never decides what passes.</cite>
-        </blockquote>
-        <div class="deploys">
-          <div class="deploy"><span class="k">SOURCES</span><span class="v">feeds, APIs, listening, per client</span></div>
-          <div class="deploy"><span class="k">TERMS</span><span class="v">priority keywords + weights → thresholds</span></div>
-          <div class="deploy"><span class="k hot">LENS</span><span class="v">narrative-risk ▸ brand-reputation</span></div>
-          <div class="deploy"><span class="k">CADENCE</span><span class="v">daily · weekly · per deployment</span></div>
-        </div>
-      </div>
-      <p style="font-size:14px;margin-top:22px;max-width:44em;"><strong>Multi-deployment by config.</strong> One engine, many deployments, each is a YAML file. The expertise lives in the config: terms, weights, and per-lens prompt content are the product; the engine just runs them. Per-deployment keys isolate one deployment's credit exhaustion from the rest.</p>
-    </div>
-
-    <div class="section">
-      <div class="section-head">
-        <span class="eyebrow">Reliability rules</span>
-        <span class="section-note">Carried over from a live emergency</span>
-      </div>
-      <div class="lessons" style="grid-template-columns:repeat(2,1fr);">
-        <div class="lesson">
-          <div class="lesson-num">01, Send at most once</div>
-          <p><strong>Committed state files</strong> survive scheduler retries and same-day races. A confirmed send is the only thing that writes state.</p>
-        </div>
-        <div class="lesson">
-          <div class="lesson-num">02, Fail closed</div>
-          <p><strong>An empty feed or malformed output blocks the send</strong> rather than shipping a confident edition on a narrowed base. A skipped edition is recoverable; a wrong one in an inbox is not.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <p class="provenance">Personal project · Python, GitHub Actions, Claude API · built in a Claude Code session from a written specification · repository private. Engineering write-up only, this page describes a system, not a service.</p>
-      <p class="closing">Interested in the thinking behind this system? A code-and-prompt walkthrough is available on request. <a href="/contact/">Get in touch →</a></p>
-    </div>
-
-    <div class="morework">
-      <div class="mw-lbl">More work</div>
-      <div class="mw-grid">
-        <a class="mw-card" href="/case-study/">
-          <div class="mw-tag">Case study · flagship</div>
-          <div class="mw-t">Harmful-information detection &amp; triage pipelines</div>
-          <div class="mw-go">Read the case study →</div>
-        </a>
-        <a class="mw-card" href="/work/mirrorline/">
-          <div class="mw-tag">R&amp;D · Mirrorline</div>
-          <div class="mw-t">Auditing what AI assistants say about an organization</div>
-          <div class="mw-go">Read the approach →</div>
-        </a>
-
-        <a class="mw-card" href="/work/reputation-readout/">
-          <div class="mw-tag">Research &amp; insight</div>
-          <div class="mw-t">From fragmented signals to an executive reputation readout</div>
-          <div class="mw-go">Read the case study →</div>
-        </a>
-      </div>
-      <p class="mw-contact">Want the detail behind any of this? <a href="/contact/">Contact me →</a></p>
-    </div>
-
+    <div id="da-status" style="border-top:1px solid #eee6d8;padding:12px 16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.2px;color:#5a5348;min-height:20px;line-height:1.5;">Raw signal arrives, source, no verdict yet.</div>
   </div>
-</main>
+</div></section>
 
-<script>
-(function () {
-  var track = document.querySelector('.gatesim .gs-track');
-  var status = document.querySelector('.gatesim .gs-status');
-  if (!track || !status) return;
+<section style="padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">Determinism first</span><span style="height:1px;flex:1;background:#ddd7cb;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;color:#6b6459;">The load-bearing decision</span></div>
+  <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:32px;align-items:center;margin-top:26px;">
+    <blockquote style="margin:0;border-left:2.5px solid #c23c22;padding-left:18px;"><p style="font-family:'IBM Plex Serif',serif;font-size:clamp(17px,2.6vw,20px);line-height:1.4;margin:0;">&ldquo;Tier assignment is computed in code, before any model call. The model writes the analysis for each tier; it never assigns the tier.&rdquo;</p><cite style="display:block;font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.5px;color:#6b6459;margin-top:10px;">The same rule as my <a href="/work/harmful-information/">harmful-information pipelines</a>: the model summarises what passes the gate; it never decides what passes.</cite></blockquote>
+    <div style="display:flex;flex-direction:column;gap:11px;">
+      <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:1.5px;font-size:13px;min-width:80px;">SOURCES</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5a5348;line-height:1.45;">feeds, APIs, listening, per client</span></div>
+      <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:1.5px;font-size:13px;min-width:80px;">TERMS</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5a5348;line-height:1.45;">priority keywords + weights &rarr; thresholds</span></div>
+      <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:1.5px;font-size:13px;min-width:80px;color:#c23c22;">LENS</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5a5348;line-height:1.45;">narrative-risk &#9656; brand-reputation</span></div>
+      <div style="display:flex;gap:14px;align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace;font-weight:600;letter-spacing:1.5px;font-size:13px;min-width:80px;">CADENCE</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5a5348;line-height:1.45;">daily &middot; weekly &middot; per deployment</span></div>
+    </div>
+  </div>
+  <p style="font-size:14px;margin-top:22px;max-width:44em;line-height:1.6;color:#33302a;"><strong>Multi-deployment by config.</strong> One engine, many deployments, each is a YAML file. The expertise lives in the config: terms, weights and per-lens prompt content are the product; the engine just runs them. Per-deployment keys isolate one deployment&rsquo;s credit exhaustion from the rest.</p>
+</div></section>
 
-  var items = [
-    { src: 's-4471', txt: 'coordinated misattribution', score: '8.2', tier: 'pri' },
-    { src: 'g-2210', txt: 'funding-allocation narrative', score: '3.4', tier: 'wat' },
-    { src: 'r-0090', txt: 'routine press mention', score: '1.1', tier: 'drop' },
-    { src: 's-5218', txt: 'donation-scam impersonation', score: '7.1', tier: 'pri' },
-    { src: 'r-3388', txt: 'recurring policy question', score: '2.6', tier: 'wat' }
-  ];
-  var tierName = { pri: 'Priority finding', wat: 'Standing watch', drop: 'Below the bar' };
-  var IW = 180;
-  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+<section style="background:#f2ede3;border-top:1px solid #e2dccf;border-bottom:1px solid #e2dccf;padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">Reliability rules</span><span style="height:1px;flex:1;background:#ddd7cb;"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.4px;color:#6b6459;">Carried over from a live emergency</span></div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:26px;margin-top:22px;">
+    <div><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6b6459;font-weight:600;letter-spacing:.5px;">01 &middot; Send at most once</div><p style="font-size:13.5px;line-height:1.62;margin:9px 0 0;color:#33302a;"><strong>Committed state files</strong> survive scheduler retries and same-day races. A confirmed send is the only thing that writes state.</p></div>
+    <div><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#6b6459;font-weight:600;letter-spacing:.5px;">02 &middot; Fail closed</div><p style="font-size:13.5px;line-height:1.62;margin:9px 0 0;color:#33302a;"><strong>An empty feed or malformed output blocks the send</strong> rather than shipping a confident edition on a narrowed base. A skipped edition is recoverable; a wrong one in an inbox is not.</p></div>
+  </div>
+</div></section>
 
-  function pos() {
-    var w = track.clientWidth, h = track.clientHeight;
-    return {
-      inX: w * 0.115, inY: h * 0.5,
-      gateX: w * 0.41, gateY: h * 0.5,
-      laneX: w * 0.76,
-      laneY: { pri: h * 0.20, wat: h * 0.5, drop: h * 0.80 }
+<section style="padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.5px;line-height:1.7;color:#8a8375;margin:0;max-width:52em;">Personal project &middot; Python, GitHub Actions, Claude API &middot; built in a Claude Code session from a written specification &middot; repository private. Engineering write-up only; this page describes a system, not a service.</p>
+  <div style="border-left:2.5px solid #c23c22;padding:2px 0 2px 20px;margin-top:18px;">
+    <p style="font-family:'IBM Plex Serif',serif;font-size:19px;line-height:1.4;margin:0;max-width:34em;">Interested in the thinking behind this system? A code-and-prompt walkthrough is available on request.</p>
+    <a href="#" style="display:inline-block;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.5px;color:#c23c22;border:1px solid #c23c22;border-radius:3px;padding:11px 18px;">Get in touch &rarr;</a>
+  </div>
+</div></section>
+
+<section style="background:#f2ede3;border-top:1px solid #e2dccf;padding:46px 0;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;">
+  <div style="display:flex;align-items:center;gap:14px;"><span style="background:#c23c22;color:#faf7f1;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;">More work</span><span style="height:1px;flex:1;background:#ddd7cb;"></span></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;">
+    <a href="/work/harmful-information/" style="display:flex;flex-direction:column;border:1px solid #ddd7cb;background:#fff;padding:20px 22px;text-decoration:none;"><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#c23c22;">Case study &middot; flagship</div><div style="font-family:'IBM Plex Serif',serif;font-size:18px;line-height:1.28;color:#1c1a17;margin:10px 0 0;">Harmful-information detection &amp; triage pipelines</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.4px;color:#6b6459;margin-top:14px;">Read the case study &rarr;</div></a>
+    <a href="/work/mirrorline/" style="display:flex;flex-direction:column;border:1px solid #ddd7cb;background:#fff;padding:20px 22px;text-decoration:none;"><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#c23c22;">AI reputation research &middot; Mirrorline</div><div style="font-family:'IBM Plex Serif',serif;font-size:18px;line-height:1.28;color:#1c1a17;margin:10px 0 0;">Helping organisations see how AI assistants represent them</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.4px;color:#6b6459;margin-top:14px;">See the Mirrorline method &rarr;</div></a>
+    <a href="/work/reputation-readout/" style="display:flex;flex-direction:column;border:1px solid #ddd7cb;background:#fff;padding:20px 22px;text-decoration:none;"><div style="font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#c23c22;">Research &amp; insight &middot; Decision support</div><div style="font-family:'IBM Plex Serif',serif;font-size:18px;line-height:1.28;color:#1c1a17;margin:10px 0 0;">From fragmented signals to an executive reputation readout</div><div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.4px;color:#6b6459;margin-top:14px;">Read the case study &rarr;</div></a>
+  </div>
+</div></section>
+
+<footer style="border-top:1px solid #ddd7cb;padding:22px 0 34px;"><div style="max-width:1020px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.4px;color:#8a8375;"><span><a href="mailto:lucile.tranchant@gmail.com" style="color:#6b6459;">lucile.tranchant@gmail.com</a> &middot; <a href="https://www.linkedin.com/in/luciletranchant" style="color:#6b6459;">LinkedIn</a></span><span>&copy; 2026 Lucile Tranchant</span></div></footer>
+<script>document.addEventListener("DOMContentLoaded",function(){
+    const track = document.getElementById('da-track');
+    const status = document.getElementById('da-status');
+    if (!track || !status) return;
+    const items = [
+      { src: 's-4471', txt: 'coordinated misattribution', score: '8.2', tier: 'pri' },
+      { src: 'g-2210', txt: 'funding-allocation narrative', score: '3.4', tier: 'wat' },
+      { src: 'r-0090', txt: 'routine press mention', score: '1.1', tier: 'drop' },
+      { src: 's-5218', txt: 'donation-scam impersonation', score: '7.1', tier: 'pri' },
+      { src: 'r-3388', txt: 'recurring policy question', score: '2.6', tier: 'wat' }
+    ];
+    const tierName = { pri: 'Priority finding', wat: 'Standing watch', drop: 'Below the bar' };
+    const tierBorder = { pri: '2px solid #c23c22', wat: '2px solid #6b6459', drop: '2px solid #ddd7cb' };
+    const IW = 180;
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const pos = () => {
+      const w = track.clientWidth, h = track.clientHeight;
+      return { inX: w * 0.115, inY: h * 0.5, gateX: w * 0.41, gateY: h * 0.5, laneX: w * 0.76, laneY: { pri: h * 0.20, wat: h * 0.5, drop: h * 0.80 } };
     };
-  }
-
-  function makeItem(it) {
-    var el = document.createElement('div');
-    el.className = 'gs-item';
-    el.innerHTML =
-      '<span class="gsi-src">' + it.src + '</span>' +
-      '<span class="gsi-txt">' + it.txt + '</span>' +
-      '<div><span class="gsi-score"><span class="lab">harm </span><span class="v"></span></span></div>' +
-      '<div class="gsi-anal"><div class="b"></div><div class="b"></div></div>';
-    track.appendChild(el);
-    return el;
-  }
-
-  async function cycle(it) {
-    var p = pos();
-    var el = makeItem(it);
-    var ih = el.offsetHeight;
-    var at = function (cx, cy) { return 'translate(' + (cx - IW / 2) + 'px,' + (cy - ih / 2) + 'px)'; };
-
-    el.style.transition = 'none';
-    el.style.opacity = '0';
-    el.style.transform = at(p.inX, p.inY);
-    el.getBoundingClientRect();
-    el.style.transition = 'transform .85s cubic-bezier(.45,0,.15,1), opacity .45s ease';
-    el.style.opacity = '1';
-    status.innerHTML = 'Raw signal arrives, source, no verdict yet.';
-    await wait(780);
-
-    el.querySelector('.gsi-score .v').textContent = it.score;
-    el.querySelector('.gsi-score').classList.add('on');
-    status.innerHTML = '<b>Code</b> scores every item, a harm/priority number, before any model call.';
-    await wait(880);
-
-    el.style.transform = at(p.gateX, p.gateY);
-    status.innerHTML = 'The <b>deterministic gate</b> compares the score against the threshold.';
-    await wait(980);
-
-    el.classList.add(it.tier);
-    el.style.transform = at(p.laneX, p.laneY[it.tier]);
-    status.innerHTML = '<b>Code</b> assigns the tier &rarr; ' + tierName[it.tier] + '.';
-    await wait(960);
-
-    if (it.tier === 'drop') {
-      status.innerHTML = 'Below the bar &mdash; <b>never sent</b>. A quiet day is allowed to stay quiet.';
-      await wait(820);
-    } else {
-      el.classList.add('writing');
-      var bars = el.querySelectorAll('.gsi-anal .b');
-      bars[0].style.width = '100%';
-      await wait(120);
-      bars[1].style.width = '70%';
-      status.innerHTML = 'Only now does the <b style="color:var(--ink)">model</b> write the analysis &mdash; it never chose the tier.';
-      await wait(1450);
-    }
-    el.style.opacity = '0';
-    await wait(460);
-    el.remove();
-  }
-
-  function renderStatic() {
-    var p = pos();
-    ['pri', 'wat', 'drop'].forEach(function (t) {
-      var it = items.find(function (x) { return x.tier === t; });
-      var el = makeItem(it);
-      var ih = el.offsetHeight;
-      el.classList.add(t);
-      el.querySelector('.gsi-score .v').textContent = it.score;
-      el.querySelector('.gsi-score').classList.add('on');
-      el.style.transform = 'translate(' + (p.laneX - IW / 2) + 'px,' + (p.laneY[t] - ih / 2) + 'px)';
-      if (t !== 'drop') {
-        el.classList.add('writing');
-        var bars = el.querySelectorAll('.gsi-anal .b');
-        bars[0].style.width = '100%'; bars[1].style.width = '70%';
+    const makeItem = (it) => {
+      const el = document.createElement('div');
+      el.style.cssText = 'position:absolute;left:0;top:0;width:180px;padding:9px 11px;background:#faf7f1;border:1px solid #ddd7cb;box-shadow:0 6px 18px -12px rgba(28,26,23,.55);z-index:4;will-change:transform,opacity;';
+      el.innerHTML =
+        '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:9px;color:#c23c22;font-weight:600;letter-spacing:.3px;">' + it.src + '</span>' +
+        '<span style="display:block;font-size:11.5px;line-height:1.32;color:#1c1a17;margin-top:3px;">' + it.txt + '</span>' +
+        '<div><span class="sc" style="display:inline-block;font-family:\'IBM Plex Mono\',monospace;font-size:11.5px;font-weight:600;color:#1c1a17;margin-top:6px;opacity:0;transform:scale(.55);transition:opacity .22s ease,transform .22s cubic-bezier(.3,1.5,.5,1);"><span style="color:#6b6459;font-weight:400;">harm </span>' + it.score + '</span></div>' +
+        '<div class="anal" style="display:none;margin-top:7px;"><div class="b" style="height:3px;background:#efe9dd;border-radius:2px;margin-top:3px;width:0;transition:width .5s ease;"></div><div class="b" style="height:3px;background:#efe9dd;border-radius:2px;margin-top:3px;width:0;transition:width .5s ease;"></div></div>';
+      track.appendChild(el);
+      return el;
+    };
+    async function cycle(it) {
+      const p = pos();
+      const el = makeItem(it);
+      const ih = el.offsetHeight;
+      const at = (cx, cy) => 'translate(' + (cx - IW / 2) + 'px,' + (cy - ih / 2) + 'px)';
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = at(p.inX, p.inY);
+      el.getBoundingClientRect();
+      el.style.transition = 'transform .85s cubic-bezier(.45,0,.15,1), opacity .45s ease';
+      el.style.opacity = '1';
+      status.innerHTML = 'Raw signal arrives, source, no verdict yet.';
+      await wait(780);
+      const sc = el.querySelector('.sc');
+      sc.style.opacity = '1'; sc.style.transform = 'scale(1)';
+      status.innerHTML = '<b style="color:#c23c22;">Code</b> scores every item, a harm/priority number, before any model call.';
+      await wait(880);
+      el.style.transform = at(p.gateX, p.gateY);
+      status.innerHTML = 'The <b style="color:#c23c22;">deterministic gate</b> compares the score against the threshold.';
+      await wait(980);
+      el.style.borderLeft = tierBorder[it.tier];
+      if (it.tier === 'drop') el.style.opacity = '0.55';
+      el.style.transform = at(p.laneX, p.laneY[it.tier]);
+      status.innerHTML = '<b style="color:#c23c22;">Code</b> assigns the tier &rarr; ' + tierName[it.tier] + '.';
+      await wait(960);
+      if (it.tier === 'drop') {
+        status.innerHTML = 'Below the bar, <b style="color:#c23c22;">never sent</b>. A quiet day is allowed to stay quiet.';
+        await wait(820);
+      } else {
+        const anal = el.querySelector('.anal'); anal.style.display = 'block';
+        const bars = el.querySelectorAll('.b');
+        bars[0].style.width = '100%';
+        await wait(120);
+        bars[1].style.width = '70%';
+        status.innerHTML = 'Only now does the <b>model</b> write the analysis, it never chose the tier.';
+        await wait(1450);
       }
-    });
-    status.innerHTML = '<b>Code</b> scores and assigns the tier; the <b style="color:var(--ink)">model</b> only writes the analysis.';
-  }
-
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce) { renderStatic(); return; }
-
-  (async function run() {
-    var i = 0;
-    while (true) {
-      if (document.hidden) { await wait(500); continue; }
-      await cycle(items[i % items.length]);
-      i++;
-      await wait(520);
+      el.style.opacity = '0';
+      await wait(460);
+      el.remove();
     }
-  })();
-})();
-</script>
-
-</body>
-
-<footer class="site">
-  <div class="wrap">
-    <span><a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
-    <span>© 2026 Lucile Tranchant</span>
-  </div>
-</footer>
-
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      const p = pos();
+      ['pri', 'wat', 'drop'].forEach((t) => {
+        const it = items.find((x) => x.tier === t);
+        const el = makeItem(it);
+        const ih = el.offsetHeight;
+        el.style.borderLeft = tierBorder[t];
+        if (t === 'drop') el.style.opacity = '0.55';
+        const sc = el.querySelector('.sc'); sc.style.opacity = '1'; sc.style.transform = 'scale(1)';
+        el.style.transform = 'translate(' + (p.laneX - IW / 2) + 'px,' + (p.laneY[t] - ih / 2) + 'px)';
+        if (t !== 'drop') { el.querySelector('.anal').style.display = 'block'; const bars = el.querySelectorAll('.b'); bars[0].style.width = '100%'; bars[1].style.width = '70%'; }
+      });
+      status.innerHTML = '<b style="color:#c23c22;">Code</b> scores and assigns the tier; the <b>model</b> only writes the analysis.';
+      return;
+    }
+    (async function run() {
+      let i = 0;
+      while (true) {
+        if (document.hidden) { await wait(500); continue; }
+        await cycle(items[i % items.length]);
+        i++;
+        await wait(520);
+      }
+    })();
+  });</script>
 </body>
 </html>
