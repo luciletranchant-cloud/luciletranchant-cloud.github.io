@@ -9,20 +9,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 
 <header class="masthead">
   <div class="wrap">
-    <a class="wordmark" href="index.html">
+    <a class="wordmark" href="/">
       <span class="diamond" aria-hidden="true"></span>
       <span>Lucile Tranchant</span>
     </a>
     <nav class="site" aria-label="Site">
-      <a href="case-study.html">Case Study</a>
-      <a href="about.html">About</a>
-      <a href="mailto:lucile.tranchant@gmail.com">Contact</a>
+      <a href="/#work">Work</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
     </nav>
   </div>
 </header>
@@ -38,25 +38,39 @@
       <p>When the tooling I needed didn't exist, I built it — three autonomous detection-and-triage pipelines on the Claude API, running daily through a live public-health emergency. I also work the institutional side of the same problem: co-drafting the Red Cross Red Crescent Movement's 2026 resolution on harmful information, and supporting the launch of its joint Movement Hub on Harmful Information.</p>
     </div>
 
-    <a class="feature" href="case-study.html">
-      <span class="eyebrow">Case Study</span>
-      <h2>Keeping an LLM pipeline honest during a live public-health emergency</h2>
-      <p class="sub">Three autonomous harmful-information monitoring pipelines, built solo on the Claude API and run daily — the detection-and-triage layer enterprise social-listening tools don't provide.</p>
-      <div class="ministats">
-        <span class="m"><b>3</b> production pipelines</span>
-        <span class="m"><b>50+</b> editions shipped</span>
-        <span class="m"><b>1</b> live PHEIC</span>
-        <span class="m"><b>0</b> engineering support</span>
+    <div class="section" id="work">
+      <div class="section-head">
+        <span class="eyebrow">Selected Work</span>
+        <span class="section-note">personal builds · operational content redacted</span>
       </div>
-      <span class="go">Read the case study →</span>
-    </a>
+      <div class="work-grid">
+        <a class="work-card" href="/case-study/">
+          <span class="tag">Case study · in production</span>
+          <h3>Keeping an LLM pipeline honest during a live public-health emergency</h3>
+          <p class="sub">Three autonomous harmful-information detection-and-triage pipelines on the Claude API, run daily through the 2026 Ebola PHEIC.</p>
+          <span class="go">Read the case study →</span>
+        </a>
+        <a class="work-card" href="/work/digest-architecture/">
+          <span class="tag">System design</span>
+          <h3>An executive-readout architecture for monitoring digests</h3>
+          <p class="sub">A config-driven, multi-client monitoring engine that leads with judgment — tier assignment decided in code, never by the model.</p>
+          <span class="go">Read the design →</span>
+        </a>
+        <a class="work-card" href="/work/mirrorline/">
+          <span class="tag">R&amp;D · in development</span>
+          <h3>Mirrorline — auditing what AI assistants say about an organization</h3>
+          <p class="sub">Structured probes to AI assistants, audited against the public record. The divergence is the finding.</p>
+          <span class="go">Read the approach →</span>
+        </a>
+      </div>
+    </div>
 
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/lucile-tranchant" rel="me">LinkedIn</a></span>
+    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
     <span>© 2026 Lucile Tranchant</span>
   </div>
 </footer>

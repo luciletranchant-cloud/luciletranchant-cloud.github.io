@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An executive-readout architecture for monitoring digests — Lucile Tranchant</title>
+<meta name="description" content="System design: a config-driven, multi-client monitoring engine where tier assignment is computed deterministically in code and the model writes analysis but never decides what matters.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="/">
+      <span class="diamond" aria-hidden="true"></span>
+      <span>Lucile Tranchant</span>
+    </a>
+    <nav class="site" aria-label="Site">
+      <a href="/#work" aria-current="page">Work</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <p class="eyebrow">Work — System Design</p>
+    <h1>An executive-readout architecture for monitoring digests</h1>
+    <p class="lede">A config-driven, multi-client monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">The design<br>problem</p>
+      <div>
+        <p>Most automated digests are newsletters: a wall of story cards, ranked by recency or engagement, with the actual judgment — <em>does anything here need attention?</em> — left to the reader. That's backwards. A reader with ninety seconds needs the conclusion first: what crossed the bar today, why it matters, and what to consider doing about it. Everything else is supporting evidence.</p>
+        <p>The hard case is the quiet day. A system that pads an empty day with filler teaches its readers to skim; a system that can honestly say <em>nothing crossed the bar today</em> earns the right to be read carefully when something does. That case is part of the definition of done, with its own test.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">The output<br>structure</p>
+      <div>
+        <p>Every edition renders in a fixed order: a one-line <strong>readout</strong> → <strong>priority findings</strong>, each as <em>what happened / why it matters / a suggested step</em> → a <strong>standing watch</strong> of items worth awareness but not action → an optional <strong>competitor watch</strong> → a <strong>coverage note</strong> stating what was scanned and what was dark, so the reader always knows the evidence base.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">Determinism<br>first</p>
+      <div>
+        <p>The load-bearing decision: <strong>tier assignment is computed in code, before any model call.</strong> Keyword and weight scoring against per-client thresholds decides what surfaces and whether it lands in priority or standing watch. The model writes the analysis for each tier — it never assigns the tier. This is the same design rule as my <a href="/case-study/">harmful-information pipelines</a>, applied to a new domain: the model summarises what passes the gate; it never decides what passes.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">Multi-client<br>by config</p>
+      <div>
+        <p>One engine, many deployments. Each client is a YAML file: sources, priority terms and weights, thresholds, cadence — and a <span class="mono" style="font-size:13px;">lens</span> field that switches the analytical frame between narrative-risk and brand-reputation framing. The expertise lives in the config: the terms, weights, and prompt content per lens are the product; the engine just runs them. Per-client API keys isolate one deployment's credit exhaustion from the rest, and cheap deterministic pre-filters run before anything reaches an API.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">Reliability<br>rules</p>
+      <div>
+        <p>Carried over from operating monitoring pipelines through a live emergency: <strong>send at most once</strong> — enforced by committed state files that survive scheduler retries and same-day races. <strong>Fail closed</strong> — an empty feed or malformed model output blocks the send rather than shipping a confident edition on a narrowed evidence base. A skipped edition is recoverable; a wrong one in an inbox is not.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="provenance">Personal project · Python, GitHub Actions, Claude API · built in a Claude Code session from a written specification · repository private. Engineering write-up only — this page describes a system, not a service.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
+    <span>© 2026 Lucile Tranchant</span>
+  </div>
+</footer>
+
+</body>
+</html>

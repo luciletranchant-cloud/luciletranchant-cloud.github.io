@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mirrorline — auditing what AI assistants say about an organization — Lucile Tranchant</title>
+<meta name="description" content="R&D: structured probes to AI assistants about an organization, audited against the public record. The divergence between the record and the answers is the finding.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="/">
+      <span class="diamond" aria-hidden="true"></span>
+      <span>Lucile Tranchant</span>
+    </a>
+    <nav class="site" aria-label="Site">
+      <a href="/#work" aria-current="page">Work</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <p class="eyebrow">Work — R&amp;D · In Development</p>
+    <h1>Mirrorline — auditing what AI assistants say about an organization</h1>
+    <p class="lede">When someone asks an AI assistant about an organization, the answer is a reputation surface almost nobody is monitoring. Mirrorline probes that surface and audits it against the public record.</p>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">The<br>problem</p>
+      <div>
+        <p>A growing share of first impressions now happens inside AI assistants rather than on a search results page. Those answers are generated fresh, vary by model and phrasing, and can drift from what the documented record actually supports — an outdated fact, a confused entity, a claim with no visible source. Organizations monitor their press and their search results; the assistant layer mostly goes unwatched.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">The<br>method</p>
+      <div>
+        <p>Structured probes — the questions real people plausibly ask about an organization — are put to AI assistants, and the answers are captured and decomposed into individual claims. Each claim is then audited against the documented public record. <strong>The divergence is the finding:</strong> what the record says, what the assistants tell people, and where the two split.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">Provenance<br>discipline</p>
+      <div>
+        <p>Every claim in an answer gets a provenance classification: supported by an identifiable source, unsourced but consistent with the record, or unverifiable. The absence of a source is itself evidence — an assistant asserting something the record can't support is exactly the signal worth surfacing. The output is a reviewed brief built for a decision-maker, not a dashboard of scores.</p>
+      </div>
+    </div>
+
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">Epistemic<br>honesty</p>
+      <div>
+        <p>A design principle carried over from my harmful-information work: the system produces <strong>signals for review, not determinations of truth.</strong> It does not promise control over what models say — nobody can honestly promise that — and it does not treat a divergence as a verdict. It flags, sources, and contextualises; judgment stays human. Designed to run in French and English.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="provenance">Personal project, in development · builds on the deterministic-gating and fail-closed patterns from the <a href="/case-study/">harmful-information pipelines</a> and the <a href="/work/digest-architecture/">executive-readout engine</a>. Engineering write-up only — this page describes an approach, not a service.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
+    <span>© 2026 Lucile Tranchant</span>
+  </div>
+</footer>
+
+</body>
+</html>
