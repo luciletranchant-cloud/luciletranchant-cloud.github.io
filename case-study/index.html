@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Keeping an LLM pipeline honest during a live public-health emergency, Lucile Tranchant</title>
+<title>Finding the harmful-information signals that matter during an emergency, Lucile Tranchant</title>
 <meta name="description" content="Case study: three automated harmful-information detection-and-triage pipelines, designed and operated independently on the Claude API, run daily through the 2026 Ebola public-health emergency.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lucile Tranchant">
@@ -44,7 +44,8 @@
   <div class="wrap">
 
     <p class="eyebrow">Case Study, Harmful-Information Detection &amp; Triage</p>
-    <h1>Keeping an LLM pipeline honest during a live public-health emergency</h1>
+    <h1>Finding the harmful-information signals that matter during an emergency</h1>
+    <p class="h1-second">Keeping an LLM pipeline honest during a live public-health emergency.</p>
     <p class="lede">Three automated harmful-information monitoring pipelines, designed and operated independently on the Claude API and run daily, the detection-and-triage layer enterprise social-listening tools don't provide.</p>
 
     <!-- PROBLEM -->
@@ -93,7 +94,7 @@
         <div class="vf"><div class="vf-l">Output</div><div class="vf-t">A concise daily assessment for human review</div></div>
         <div class="vf"><div class="vf-l">Value</div><div class="vf-t">Earlier, more focused attention on risks to trust, access, safety or operations</div></div>
       </div>
-      <p class="product-line">The output was not another dashboard. It was a daily decision product: what changed, why it mattered, what required attention, and what could remain on watch. A full anatomy of an edition is in the <a href="#anatomy">appendix below</a>.</p>
+      <p class="product-line">The output was not another dashboard. It was a daily decision product: what changed, why it mattered, what required attention, and what could remain on watch. A full anatomy of an edition is shown just below.</p>
 
       <h2 style="margin-top:34px;font-size:20px;">What the system made possible</h2>
       <ul class="madelist">
@@ -104,6 +105,93 @@
         <li>Visible warnings when data coverage degrades</li>
         <li>Faster identification of narratives that may affect trust, public-health behaviour, access or staff safety</li>
       </ul>
+    </div>
+
+    <!-- THE PRODUCT: SAMPLE EDITION -->
+    <div class="section">
+      <div class="section-head" id="anatomy">
+        <span class="eyebrow">The Product · Sample Edition</span>
+        <span class="section-note">Structure real · content redacted</span>
+      </div>
+      <h2 style="margin-top:24px;">What an edition looks like, and why each block exists</h2>
+
+      <div class="anatomy">
+        <div class="mail" aria-label="Redacted sample digest edition">
+          <div class="mail-subject">
+            <div class="tag">Subject</div>
+            <div class="subj">EVD Harmful-Information Digest, Edition <span style="color:var(--accent);">nn</span></div>
+          </div>
+          <div class="mail-body">
+            <div>
+              <div class="msec-label">Snapshot <sup>1</sup></div>
+              <p class="snap">One narrative crossed the priority bar overnight; two on watch. All sources reporting except GDELT (backfill pending).</p>
+            </div>
+            <div>
+              <div class="msec-label">Harmful Narratives <sup>2</sup></div>
+              <div class="item flagged">
+                <div class="item-head">
+                  <span><span class="id">N4</span> · TIER 2 SOURCE · <span class="src">s-nnnn</span> <sup>3</sup></span>
+                  <span class="harm">HARM 7.1</span>
+                </div>
+                <p class="itxt">Claim that a vaccination team was turned away at a checkpoint, spreading in-language across two regional pages since 02:10.</p>
+              </div>
+              <div class="item">
+                <div class="item-head">
+                  <span><span class="id">N7</span> · NEW · TIER 3 · <span class="src">g-nnnn d-nnnn</span></span>
+                  <span class="harm">HARM 5.4</span>
+                </div>
+                <p class="itxt">Funding-misuse allegation resurfacing after a leadership interview; stable volume, no new vectors.</p>
+              </div>
+            </div>
+            <div>
+              <div class="msec-label">Threats to Staff &amp; Operations <sup>4</sup></div>
+              <p class="mtxt">One post naming a field coordinator, caught by the proximity detector and escalated for security review outside the model.</p>
+            </div>
+            <div class="msec-cond">
+              <div class="msec-label">Scam / Impersonation Watch <sup>5</sup></div>
+              <div class="note live">No signal today — the section is omitted from the live edition rather than padded.</div>
+            </div>
+            <div>
+              <div class="msec-label">Recommended Responses</div>
+              <div class="resp-line"><span class="n">1.</span><span>Publish a dated correction on the owned channel, in-language.</span></div>
+              <div class="resp-line"><span class="n">2.</span><span>Brief regional spokespeople with the agreed checkpoint line.</span></div>
+              <div class="resp-line"><span class="n">3.</span><span>Report the impersonation account; monitor for re-posting.</span></div>
+            </div>
+            <div class="register">
+              <div class="msec-label">Sources &amp; Item Register <sup>6</sup></div>
+              <div class="ids">s-4471 · g-2210 · r-0090 · d-7742 · s-5218 …</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annos">
+          <div class="anno">
+            <div class="n">1</div>
+            <p><strong>Deterministic first.</strong> Every item enters the edition with a harm score from the 12+-category lexicon, computed before the model ever sees it.</p>
+          </div>
+          <div class="anno">
+            <div class="n">2</div>
+            <p><strong>Persistent narrative numbering.</strong> N1, N2… persist across editions, so an expert can track how a narrative evolves day over day.</p>
+          </div>
+          <div class="anno">
+            <div class="n">3</div>
+            <p><strong>Provenance by prefix.</strong> Item IDs carry their source: <span class="code">s</span> = Sprinklr, <span class="code">g</span> = GNews, <span class="code">r</span> = RSS, <span class="code">d</span> = GDELT, every claim traceable to its source record.</p>
+          </div>
+          <div class="anno">
+            <div class="n">4</div>
+            <p><strong>Threats caught outside the model.</strong> A dedicated accent-folding, proximity-aware detector flags direct threats to staff, too important to leave to a probabilistic step.</p>
+          </div>
+          <div class="anno">
+            <div class="n">5</div>
+            <p><strong>Conditional sections.</strong> They render only when there is signal. No padding: an empty section is itself information the reader can trust.</p>
+          </div>
+          <div class="anno">
+            <div class="n">6</div>
+            <p><strong>The register closes the loop.</strong> Assessment → item → source. This is what makes the digest auditable rather than just plausible.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- SYSTEM -->
@@ -204,94 +292,10 @@
       <p class="provenance">Developed independently as an experimental monitoring workflow. All operational content shown here has been redacted; this write-up focuses on system design and lessons learned.</p>
     </div>
 
-    <!-- APPENDIX: EDITION ANATOMY -->
+    <!-- WALKTHROUGH CTA -->
     <div class="section">
-      <div class="section-head" id="anatomy">
-        <span class="eyebrow">Appendix, Sample Edition, Anatomy</span>
-        <span class="section-note">Structure real · content redacted</span>
-      </div>
-      <h2 style="margin-top:24px;">What an edition looks like, and why each block exists</h2>
-
-      <div class="anatomy">
-        <div class="mail" aria-label="Redacted sample digest edition">
-          <div class="mail-subject">
-            <div class="tag">Subject</div>
-            <div class="subj">EVD Harmful-Information Digest, Edition <span style="color:var(--accent);">nn</span></div>
-          </div>
-          <div class="mail-body">
-            <div>
-              <div class="msec-label">Snapshot <sup>1</sup></div>
-              <div class="bar" style="width:100%;"></div>
-              <div class="bar" style="width:72%;margin-top:5px;"></div>
-            </div>
-            <div>
-              <div class="msec-label">Harmful Narratives <sup>2</sup></div>
-              <div class="item flagged">
-                <div class="item-head">
-                  <span><span class="id">N4</span> · TIER 2 SOURCE · <span class="src">s-nnnn</span> <sup>3</sup></span>
-                  <span class="harm">HARM 7.1</span>
-                </div>
-                <div class="bar" style="width:90%;"></div>
-              </div>
-              <div class="item">
-                <div class="item-head">
-                  <span><span class="id">N7</span> · NEW · TIER 3 · <span class="src">g-nnnn d-nnnn</span></span>
-                  <span class="harm">HARM 5.4</span>
-                </div>
-                <div class="bar" style="width:80%;"></div>
-              </div>
-            </div>
-            <div>
-              <div class="msec-label">Threats to Staff &amp; Operations <sup>4</sup></div>
-              <div class="bar" style="width:64%;"></div>
-            </div>
-            <div class="msec-cond">
-              <div class="msec-label">Scam / Impersonation Watch <sup>5</sup></div>
-              <div class="note">conditional, renders only when signal exists</div>
-            </div>
-            <div>
-              <div class="msec-label">Recommended Responses</div>
-              <div class="resp-row"><span class="n">1.</span><span class="bar"></span></div>
-              <div class="resp-row"><span class="n">2.</span><span class="bar"></span></div>
-              <div class="resp-row"><span class="n">3.</span><span class="bar" style="flex:0 0 70%;"></span></div>
-            </div>
-            <div class="register">
-              <div class="msec-label">Sources &amp; Item Register <sup>6</sup></div>
-              <div class="ids">s-nnnn · g-nnnn · r-nnnn · d-nnnn …</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="annos">
-          <div class="anno">
-            <div class="n">1</div>
-            <p><strong>Deterministic first.</strong> Every item enters the edition with a harm score from the 12+-category lexicon, computed before the model ever sees it.</p>
-          </div>
-          <div class="anno">
-            <div class="n">2</div>
-            <p><strong>Persistent narrative numbering.</strong> N1, N2… persist across editions, so an expert can track how a narrative evolves day over day.</p>
-          </div>
-          <div class="anno">
-            <div class="n">3</div>
-            <p><strong>Provenance by prefix.</strong> Item IDs carry their source: <span class="code">s</span> = Sprinklr, <span class="code">g</span> = GNews, <span class="code">r</span> = RSS, <span class="code">d</span> = GDELT, every claim traceable to its source record.</p>
-          </div>
-          <div class="anno">
-            <div class="n">4</div>
-            <p><strong>Threats caught outside the model.</strong> A dedicated accent-folding, proximity-aware detector flags direct threats to staff, too important to leave to a probabilistic step.</p>
-          </div>
-          <div class="anno">
-            <div class="n">5</div>
-            <p><strong>Conditional sections.</strong> They render only when there is signal. No padding: an empty section is itself information the reader can trust.</p>
-          </div>
-          <div class="anno">
-            <div class="n">6</div>
-            <p><strong>The register closes the loop.</strong> Assessment → item → source. This is what makes the digest auditable rather than just plausible.</p>
-          </div>
-        </div>
-      </div>
-
       <div class="panel" style="margin-top:30px;">
-        <p style="font-family:var(--serif);font-style:italic;">Interested in the thinking behind this system? A redacted edition and a code-and-prompt walkthrough are available on request. <a href="/contact/">Get in touch →</a></p>
+        <p style="font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.55;">Interested in the thinking behind this system? A redacted edition and a code-and-prompt walkthrough are available on request. <a href="/contact/">Get in touch →</a></p>
       </div>
     </div>
 
