@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keeping an LLM pipeline honest during a live public-health emergency — Lucile Tranchant</title>
+<meta name="description" content="Case study: three autonomous harmful-information detection and triage pipelines built solo on the Claude API, run daily through the 2026 Ebola PHEIC.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href="index.html">
+      <span class="diamond" aria-hidden="true"></span>
+      <span>Lucile Tranchant</span>
+    </a>
+    <nav class="site" aria-label="Site">
+      <a href="case-study.html" aria-current="page">Case Study</a>
+      <a href="about.html">About</a>
+      <a href="mailto:lucile.tranchant@gmail.com">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <p class="eyebrow">Case Study — Harmful-Information Detection &amp; Triage</p>
+    <h1>Keeping an LLM pipeline honest during a live public-health emergency</h1>
+    <p class="lede">Three autonomous harmful-information monitoring pipelines, built solo on the Claude API and run daily — the detection-and-triage layer enterprise social-listening tools don't provide.</p>
+
+    <!-- PROBLEM -->
+    <div class="section label-col">
+      <p class="eyebrow" style="padding-top:4px;">The<br>Problem</p>
+      <p style="font-size:16px;">During live humanitarian emergencies, harmful information outruns manual monitoring: health disinformation during an outbreak, donation-scam impersonations, narratives that put field staff at risk. Enterprise social-listening tools surface reach and sentiment — not harm. Working in communications monitoring at the International Federation of Red Cross and Red Crescent Societies (IFRC) in Geneva — and previously on UNICEF's digital analytics team in New York — I built the missing layer myself: pipelines that <strong>detect, score, and triage</strong> harmful-information signal every day, and ship assessments as an opt-in expert digest.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats" role="list">
+      <div class="stat" role="listitem">
+        <div class="n">3</div>
+        <div class="t">production pipelines, one shared architecture</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">50<span class="plus">+</span></div>
+        <div class="t">editions shipped on the EVD pipeline alone</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">12<span class="plus">+</span></div>
+        <div class="t">harm-lexicon categories in the deterministic gate</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">4</div>
+        <div class="t">ingestion sources — Sprinklr · GNews · RSS · GDELT</div>
+      </div>
+      <div class="stat hot" role="listitem">
+        <div class="n">0</div>
+        <div class="t">engineering support: solo build &amp; operations</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">1</div>
+        <div class="t">live PHEIC — the 2026 Ebola emergency</div>
+      </div>
+    </div>
+
+    <!-- SYSTEM -->
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">The System</span>
+        <span class="section-note">Python · <strong style="color:var(--ink);">GitHub Actions</strong> cron · one codebase, three config deployments</span>
+      </div>
+
+      <div class="flow">
+        <div class="pl-stage">
+          <div class="num">01</div>
+          <div class="name">Ingest</div>
+          <div class="detail">Sprinklr listening<br>GNews · RSS<br>Arabic RSS (MENA) · GDELT (EVD)</div>
+        </div>
+        <div class="arrow" aria-hidden="true">›</div>
+        <div class="pl-stage">
+          <div class="num">02</div>
+          <div class="name">Dedupe &amp; Idempotency</div>
+          <div class="detail">at-most-once send/day<br>state-file + runs-API<br>redundant off-hour crons</div>
+        </div>
+        <div class="arrow" aria-hidden="true">›</div>
+        <div class="pl-stage dark">
+          <div class="num">03</div>
+          <div class="name">Deterministic Gate</div>
+          <div class="detail">harm-lexicon scoring<br>source-risk tiers<br>relevance gate · <span class="hot">fail closed</span></div>
+        </div>
+        <div class="arrow" aria-hidden="true">›</div>
+        <div class="pl-stage">
+          <div class="num">04</div>
+          <div class="name">LLM Assessment</div>
+          <div class="detail">Claude API<br>segmented context blocks<br>JSON schema + auto-repair</div>
+        </div>
+        <div class="arrow" aria-hidden="true">›</div>
+        <div class="pl-stage">
+          <div class="num">05</div>
+          <div class="name">Render &amp; Send</div>
+          <div class="detail">HTML digest<br>Gmail SMTP<br>opt-in expert list</div>
+        </div>
+      </div>
+
+      <div class="quote-row">
+        <blockquote class="rule">
+          <p>"The model summarises what passes the gate. It never decides what passes."</p>
+          <cite>— design rule no. 1, and the reason the audience can trust it</cite>
+        </blockquote>
+        <div class="deploys">
+          <div class="deploy"><span class="k">GLOBAL</span><span class="v">network-wide daily</span></div>
+          <div class="deploy"><span class="k">MENA</span><span class="v">Gaza · Lebanon · Syria · Yemen · Sudan · Iran</span></div>
+          <div class="deploy"><span class="k hot">EVD</span><span class="v">Ebola, DRC/Uganda · PHEIC since 16 May 2026</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTION LESSONS -->
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Production Lessons</span>
+        <span class="section-note">The failure modes are the point — anyone can demo a happy path</span>
+      </div>
+      <div class="lessons">
+        <div class="lesson">
+          <div class="lesson-num">01 — The fail-open incident</div>
+          <p>Mid-crisis, an OAuth refresh token expired and the social feed went dark with 401s. The dangerous part: the pipeline could keep shipping confident assessments on a silently narrowed evidence base. The patch is an empty-feed guard — a dark source now degrades the edition <em>visibly</em> instead of quietly vanishing from it. <strong>LLM systems fail open by default; honesty has to be engineered in.</strong></p>
+        </div>
+        <div class="lesson">
+          <div class="lesson-num">02 — The idempotency trap</div>
+          <p>Redundant retry crons (free-tier schedulers skip and drift) meet a hard rule: at most one send per day. When credit exhaustion killed a run mid-execution, a naive re-run would have double-sent — or recorded a send that never happened. What held: <strong>state committed only on confirmed send,</strong> pushed back with rebase/autostash to survive same-day retry races.</p>
+        </div>
+        <div class="lesson">
+          <div class="lesson-num">03 — Determinism at the gate</div>
+          <p>What surfaces is decided by code, not the model: lexicon scores, source-risk tiers, relevance gates — plus an accent-folding, proximity-aware detector for direct threats against staff that runs entirely outside the LLM. <strong>Fail closed: a skipped edition beats a malformed one</strong> in an expert's inbox. The model judges pre-qualified items, inside a schema, with automated JSON repair.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRUST & SAFETY -->
+    <div class="section">
+      <div class="panel">
+        <span class="eyebrow">In Trust-&amp;-Safety Terms</span>
+        <p>This is the automated review-and-triage half of an enforcement workflow: <span class="chain">multi-source ingestion → taxonomy classification → structured model-assisted assessment → human-ready escalation</span> — with the accuracy safeguards that only production teaches. Code and prompt-design walkthrough on request.</p>
+      </div>
+      <p class="provenance">Built and operated as a personal initiative on a personal Anthropic API key, pending organizational adoption. All operational content on this page is redacted.</p>
+    </div>
+
+    <!-- APPENDIX: EDITION ANATOMY -->
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Appendix — Sample Edition, Anatomy</span>
+        <span class="section-note">Structure real · content redacted</span>
+      </div>
+      <h2 style="margin-top:24px;">What an edition looks like — and why each block exists</h2>
+
+      <div class="anatomy">
+        <div class="mail" aria-label="Redacted sample digest edition">
+          <div class="mail-subject">
+            <div class="tag">Subject</div>
+            <div class="subj">EVD Harmful-Information Digest — Edition <span style="color:var(--accent);">nn</span></div>
+          </div>
+          <div class="mail-body">
+            <div>
+              <div class="msec-label">Snapshot <sup>1</sup></div>
+              <div class="bar" style="width:100%;"></div>
+              <div class="bar" style="width:72%;margin-top:5px;"></div>
+            </div>
+            <div>
+              <div class="msec-label">Harmful Narratives <sup>2</sup></div>
+              <div class="item flagged">
+                <div class="item-head">
+                  <span><span class="id">N4</span> · TIER 2 SOURCE · <span class="src">s-nnnn</span> <sup>3</sup></span>
+                  <span class="harm">HARM 7.1</span>
+                </div>
+                <div class="bar" style="width:90%;"></div>
+              </div>
+              <div class="item">
+                <div class="item-head">
+                  <span><span class="id">N7</span> · NEW · TIER 3 · <span class="src">g-nnnn d-nnnn</span></span>
+                  <span class="harm">HARM 5.4</span>
+                </div>
+                <div class="bar" style="width:80%;"></div>
+              </div>
+            </div>
+            <div>
+              <div class="msec-label">Threats to Staff &amp; Operations <sup>4</sup></div>
+              <div class="bar" style="width:64%;"></div>
+            </div>
+            <div class="msec-cond">
+              <div class="msec-label">Scam / Impersonation Watch <sup>5</sup></div>
+              <div class="note">conditional — renders only when signal exists</div>
+            </div>
+            <div>
+              <div class="msec-label">Recommended Responses</div>
+              <div class="resp-row"><span class="n">1.</span><span class="bar"></span></div>
+              <div class="resp-row"><span class="n">2.</span><span class="bar"></span></div>
+              <div class="resp-row"><span class="n">3.</span><span class="bar" style="flex:0 0 70%;"></span></div>
+            </div>
+            <div class="register">
+              <div class="msec-label">Sources &amp; Item Register <sup>6</sup></div>
+              <div class="ids">s-nnnn · g-nnnn · r-nnnn · d-nnnn …</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annos">
+          <div class="anno">
+            <div class="n">1</div>
+            <p><strong>Deterministic first.</strong> Every item enters the edition with a harm score from the 12+-category lexicon — computed before the model ever sees it.</p>
+          </div>
+          <div class="anno">
+            <div class="n">2</div>
+            <p><strong>Persistent narrative numbering.</strong> N1, N2… persist across editions, so an expert can track how a narrative evolves day over day.</p>
+          </div>
+          <div class="anno">
+            <div class="n">3</div>
+            <p><strong>Provenance by prefix.</strong> Item IDs carry their source: <span class="code">s</span> = Sprinklr, <span class="code">g</span> = GNews, <span class="code">r</span> = RSS, <span class="code">d</span> = GDELT — every claim traceable to its source record.</p>
+          </div>
+          <div class="anno">
+            <div class="n">4</div>
+            <p><strong>Threats caught outside the model.</strong> A dedicated accent-folding, proximity-aware detector flags direct threats to staff — too important to leave to a probabilistic step.</p>
+          </div>
+          <div class="anno">
+            <div class="n">5</div>
+            <p><strong>Conditional sections.</strong> They render only when there is signal. No padding: an empty section is itself information the reader can trust.</p>
+          </div>
+          <div class="anno">
+            <div class="n">6</div>
+            <p><strong>The register closes the loop.</strong> Assessment → item → source. This is what makes the digest auditable rather than just plausible.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:30px;">
+        <p style="font-family:var(--serif);font-style:italic;">The structure above is the real template. A genuinely redacted live edition is available on request — <a href="mailto:lucile.tranchant@gmail.com">get in touch</a>.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/lucile-tranchant" rel="me">LinkedIn</a></span>
+    <span>© 2026 Lucile Tranchant</span>
+  </div>
+</footer>
+
+</body>
+</html>
