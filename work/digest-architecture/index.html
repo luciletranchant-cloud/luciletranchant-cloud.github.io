@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>An executive-readout architecture for monitoring digests — Lucile Tranchant</title>
-<meta name="description" content="System design: a config-driven, multi-client monitoring engine where tier assignment is computed deterministically in code and the model writes analysis but never decides what matters.">
+<title>An executive-readout architecture for monitoring digests, Lucile Tranchant</title>
+<meta name="description" content="System design: a config-driven, multi-deployment monitoring engine where tier assignment is computed deterministically in code and the model writes analysis but never decides what matters.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 
@@ -22,6 +22,7 @@
     <nav class="site" aria-label="Site">
       <a href="/#work" aria-current="page">Work</a>
       <a href="/about/">About</a>
+      <a href="/resume.pdf">Résumé</a>
       <a href="/contact/">Contact</a>
     </nav>
   </div>
@@ -30,56 +31,266 @@
 <main>
   <div class="wrap">
 
-    <p class="eyebrow">Work — System Design</p>
+    <p class="eyebrow">Work, System Design</p>
     <h1>An executive-readout architecture for monitoring digests</h1>
-    <p class="lede">A config-driven, multi-client monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
+    <p class="lede">A config-driven, multi-deployment monitoring engine that leads with judgment: the readout comes first, the evidence follows, and a language model never decides what matters.</p>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">How it decides</span>
+        <span class="section-note">Watch one signal move through the gate</span>
+      </div>
+      <div class="gatesim" aria-label="Animated diagram: code scores and routes each signal; the model only writes analysis">
+        <div class="gs-head">
+          <span class="t">Deterministic routing · live</span>
+          <span class="h">Code assigns the tier, the model only writes</span>
+        </div>
+        <div class="gs-scroll">
+          <div class="gs-track">
+            <div class="gs-in" aria-hidden="true"></div>
+            <div class="gs-inlbl">Signal in</div>
+            <div class="gs-gate" aria-hidden="true">
+              <div class="g1">Gate</div>
+              <div class="g2">code · not the model</div>
+            </div>
+            <div class="gs-lane pri" aria-hidden="true"><span class="ll">Priority</span></div>
+            <div class="gs-lane wat" aria-hidden="true"><span class="ll">Standing watch</span></div>
+            <div class="gs-lane drop" aria-hidden="true"><span class="ll">Below the bar</span></div>
+          </div>
+        </div>
+        <div class="gs-status">Raw signal arrives, source, no verdict yet.</div>
+      </div>
+    </div>
 
     <div class="section label-col">
       <p class="eyebrow" style="padding-top:4px;">The design<br>problem</p>
       <div>
-        <p>Most automated digests are newsletters: a wall of story cards, ranked by recency or engagement, with the actual judgment — <em>does anything here need attention?</em> — left to the reader. That's backwards. A reader with ninety seconds needs the conclusion first: what crossed the bar today, why it matters, and what to consider doing about it. Everything else is supporting evidence.</p>
-        <p>The hard case is the quiet day. A system that pads an empty day with filler teaches its readers to skim; a system that can honestly say <em>nothing crossed the bar today</em> earns the right to be read carefully when something does. That case is part of the definition of done, with its own test.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">The output<br>structure</p>
-      <div>
-        <p>Every edition renders in a fixed order: a one-line <strong>readout</strong> → <strong>priority findings</strong>, each as <em>what happened / why it matters / a suggested step</em> → a <strong>standing watch</strong> of items worth awareness but not action → an optional <strong>competitor watch</strong> → a <strong>coverage note</strong> stating what was scanned and what was dark, so the reader always knows the evidence base.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">Determinism<br>first</p>
-      <div>
-        <p>The load-bearing decision: <strong>tier assignment is computed in code, before any model call.</strong> Keyword and weight scoring against per-client thresholds decides what surfaces and whether it lands in priority or standing watch. The model writes the analysis for each tier — it never assigns the tier. This is the same design rule as my <a href="/case-study/">harmful-information pipelines</a>, applied to a new domain: the model summarises what passes the gate; it never decides what passes.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">Multi-client<br>by config</p>
-      <div>
-        <p>One engine, many deployments. Each client is a YAML file: sources, priority terms and weights, thresholds, cadence — and a <span class="mono" style="font-size:13px;">lens</span> field that switches the analytical frame between narrative-risk and brand-reputation framing. The expertise lives in the config: the terms, weights, and prompt content per lens are the product; the engine just runs them. Per-client API keys isolate one deployment's credit exhaustion from the rest, and cheap deterministic pre-filters run before anything reaches an API.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">Reliability<br>rules</p>
-      <div>
-        <p>Carried over from operating monitoring pipelines through a live emergency: <strong>send at most once</strong> — enforced by committed state files that survive scheduler retries and same-day races. <strong>Fail closed</strong> — an empty feed or malformed model output blocks the send rather than shipping a confident edition on a narrowed evidence base. A skipped edition is recoverable; a wrong one in an inbox is not.</p>
+        <p>Most automated digests are newsletters: a wall of story cards ranked by recency, with the actual judgment, <em>does anything here need attention?</em>, left to the reader. A reader with ninety seconds needs the conclusion first.</p>
+        <p>The hard case is the quiet day. A system that can honestly say <em>nothing crossed the bar today</em> earns the right to be read carefully when something does, so that case has its own test.</p>
       </div>
     </div>
 
     <div class="section">
-      <p class="provenance">Personal project · Python, GitHub Actions, Claude API · built in a Claude Code session from a written specification · repository private. Engineering write-up only — this page describes a system, not a service.</p>
+      <div class="section-head">
+        <span class="eyebrow">The output structure</span>
+        <span class="section-note">One edition · fixed order · sample content</span>
+      </div>
+      <div class="anatomy">
+        <div class="edition" aria-label="Sample rendered edition">
+          <div class="ed-head">
+            <div>
+              <div class="tag">Subject</div>
+              <div class="subj">Monitoring Digest, Edition 47</div>
+            </div>
+            <div class="meta">TUE · 06:00 · daily</div>
+          </div>
+          <div class="ed-body">
+            <div class="ed-block">
+              <div class="msec-label">Readout</div>
+              <div class="readout"><p>One item crossed the priority bar overnight; three on standing watch. All monitored sources reporting.</p></div>
+            </div>
+            <div class="ed-block">
+              <div class="msec-label">Priority finding <span style="color:var(--accent);">1</span></div>
+              <div class="finding">
+                <p class="claim">A coordinated set of posts misattributed a policy reversal to the organization, gaining traction on two regional networks overnight.</p>
+                <div class="wxs">
+                  <div class="wxs-row"><span class="k">What</span><span class="v">~40 near-duplicate posts, in-language, first seen 02:10; amplified by two mid-size accounts.</span></div>
+                  <div class="wxs-row"><span class="k">Why</span><span class="v">The claim is factually wrong and spreading; left alone it becomes the reference version within a day.</span></div>
+                  <div class="wxs-row step"><span class="k">Step</span><span class="v">Publish a dated correction on the owned channel; brief regional spokespeople with the agreed line.</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="ed-block">
+              <div class="msec-label">Standing watch</div>
+              <div class="watch">
+                <div class="watch-row"><span class="wn">01</span><span class="wt">Recurring narrative questioning funding allocation, stable volume, no new vectors.</span><span class="ws">awareness</span></div>
+                <div class="watch-row"><span class="wn">02</span><span class="wt">Low-level impersonation account, reported, awaiting platform action.</span><span class="ws">tracking</span></div>
+                <div class="watch-row"><span class="wn">03</span><span class="wt">Sentiment dip after a leadership announcement, within normal range.</span><span class="ws">awareness</span></div>
+              </div>
+            </div>
+            <div class="ed-block">
+              <div class="coverage"><b>Coverage.</b> Scanned: listening feed · news API · 6 regional RSS. <span class="dark">Dark: one social API (auth refresh pending)</span>, edition degraded visibly, not silently.</div>
+            </div>
+          </div>
+        </div>
+        <div class="annos">
+          <div class="anno"><div class="n">1</div><p><strong>Readout first.</strong> The conclusion leads; evidence follows. Ninety seconds is enough to know whether to act.</p></div>
+          <div class="anno"><div class="n">2</div><p><strong>What / why / step.</strong> Every priority finding carries all three, never an alert without a recommended move.</p></div>
+          <div class="anno"><div class="n">3</div><p><strong>Standing watch, not filler.</strong> Awareness items sit apart from action items, so the priority bar stays meaningful.</p></div>
+          <div class="anno"><div class="n">4</div><p><strong>Coverage note closes the loop.</strong> What was scanned and what went dark, the reader always knows the evidence base.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Determinism first</span>
+        <span class="section-note">The load-bearing decision</span>
+      </div>
+      <div class="quote-row">
+        <blockquote class="rule">
+          <p>"Tier assignment is computed in code, before any model call. The model writes the analysis for each tier, it never assigns the tier."</p>
+          <cite>,  the same rule as my <a href="/case-study/">harmful-information pipelines</a>: the model summarises what passes the gate; it never decides what passes.</cite>
+        </blockquote>
+        <div class="deploys">
+          <div class="deploy"><span class="k">SOURCES</span><span class="v">feeds, APIs, listening, per client</span></div>
+          <div class="deploy"><span class="k">TERMS</span><span class="v">priority keywords + weights → thresholds</span></div>
+          <div class="deploy"><span class="k hot">LENS</span><span class="v">narrative-risk ▸ brand-reputation</span></div>
+          <div class="deploy"><span class="k">CADENCE</span><span class="v">daily · weekly · per deployment</span></div>
+        </div>
+      </div>
+      <p style="font-size:14px;margin-top:22px;max-width:44em;"><strong>Multi-deployment by config.</strong> One engine, many deployments, each is a YAML file. The expertise lives in the config: terms, weights, and per-lens prompt content are the product; the engine just runs them. Per-deployment keys isolate one deployment's credit exhaustion from the rest.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Reliability rules</span>
+        <span class="section-note">Carried over from a live emergency</span>
+      </div>
+      <div class="lessons" style="grid-template-columns:repeat(2,1fr);">
+        <div class="lesson">
+          <div class="lesson-num">01, Send at most once</div>
+          <p><strong>Committed state files</strong> survive scheduler retries and same-day races. A confirmed send is the only thing that writes state.</p>
+        </div>
+        <div class="lesson">
+          <div class="lesson-num">02, Fail closed</div>
+          <p><strong>An empty feed or malformed output blocks the send</strong> rather than shipping a confident edition on a narrowed base. A skipped edition is recoverable; a wrong one in an inbox is not.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="provenance">Personal project · Python, GitHub Actions, Claude API · built in a Claude Code session from a written specification · repository private. Engineering write-up only, this page describes a system, not a service.</p>
+      <p class="closing">Interested in the thinking behind this system? A code-and-prompt walkthrough is available on request. <a href="mailto:lucile.tranchant@gmail.com">Get in touch →</a></p>
     </div>
 
   </div>
 </main>
 
+<script>
+(function () {
+  var track = document.querySelector('.gatesim .gs-track');
+  var status = document.querySelector('.gatesim .gs-status');
+  if (!track || !status) return;
+
+  var items = [
+    { src: 's-4471', txt: 'coordinated misattribution', score: '8.2', tier: 'pri' },
+    { src: 'g-2210', txt: 'funding-allocation narrative', score: '3.4', tier: 'wat' },
+    { src: 'r-0090', txt: 'routine press mention', score: '1.1', tier: 'drop' },
+    { src: 's-5218', txt: 'donation-scam impersonation', score: '7.1', tier: 'pri' },
+    { src: 'r-3388', txt: 'recurring policy question', score: '2.6', tier: 'wat' }
+  ];
+  var tierName = { pri: 'Priority finding', wat: 'Standing watch', drop: 'Below the bar' };
+  var IW = 180;
+  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  function pos() {
+    var w = track.clientWidth, h = track.clientHeight;
+    return {
+      inX: w * 0.115, inY: h * 0.5,
+      gateX: w * 0.41, gateY: h * 0.5,
+      laneX: w * 0.76,
+      laneY: { pri: h * 0.20, wat: h * 0.5, drop: h * 0.80 }
+    };
+  }
+
+  function makeItem(it) {
+    var el = document.createElement('div');
+    el.className = 'gs-item';
+    el.innerHTML =
+      '<span class="gsi-src">' + it.src + '</span>' +
+      '<span class="gsi-txt">' + it.txt + '</span>' +
+      '<div><span class="gsi-score"><span class="lab">harm </span><span class="v"></span></span></div>' +
+      '<div class="gsi-anal"><div class="b"></div><div class="b"></div></div>';
+    track.appendChild(el);
+    return el;
+  }
+
+  async function cycle(it) {
+    var p = pos();
+    var el = makeItem(it);
+    var ih = el.offsetHeight;
+    var at = function (cx, cy) { return 'translate(' + (cx - IW / 2) + 'px,' + (cy - ih / 2) + 'px)'; };
+
+    el.style.transition = 'none';
+    el.style.opacity = '0';
+    el.style.transform = at(p.inX, p.inY);
+    el.getBoundingClientRect();
+    el.style.transition = 'transform .85s cubic-bezier(.45,0,.15,1), opacity .45s ease';
+    el.style.opacity = '1';
+    status.innerHTML = 'Raw signal arrives, source, no verdict yet.';
+    await wait(780);
+
+    el.querySelector('.gsi-score .v').textContent = it.score;
+    el.querySelector('.gsi-score').classList.add('on');
+    status.innerHTML = '<b>Code</b> scores every item, a harm/priority number, before any model call.';
+    await wait(880);
+
+    el.style.transform = at(p.gateX, p.gateY);
+    status.innerHTML = 'The <b>deterministic gate</b> compares the score against the threshold.';
+    await wait(980);
+
+    el.classList.add(it.tier);
+    el.style.transform = at(p.laneX, p.laneY[it.tier]);
+    status.innerHTML = '<b>Code</b> assigns the tier &rarr; ' + tierName[it.tier] + '.';
+    await wait(960);
+
+    if (it.tier === 'drop') {
+      status.innerHTML = 'Below the bar &mdash; <b>never sent</b>. A quiet day is allowed to stay quiet.';
+      await wait(820);
+    } else {
+      el.classList.add('writing');
+      var bars = el.querySelectorAll('.gsi-anal .b');
+      bars[0].style.width = '100%';
+      await wait(120);
+      bars[1].style.width = '70%';
+      status.innerHTML = 'Only now does the <b style="color:var(--ink)">model</b> write the analysis &mdash; it never chose the tier.';
+      await wait(1450);
+    }
+    el.style.opacity = '0';
+    await wait(460);
+    el.remove();
+  }
+
+  function renderStatic() {
+    var p = pos();
+    ['pri', 'wat', 'drop'].forEach(function (t) {
+      var it = items.find(function (x) { return x.tier === t; });
+      var el = makeItem(it);
+      var ih = el.offsetHeight;
+      el.classList.add(t);
+      el.querySelector('.gsi-score .v').textContent = it.score;
+      el.querySelector('.gsi-score').classList.add('on');
+      el.style.transform = 'translate(' + (p.laneX - IW / 2) + 'px,' + (p.laneY[t] - ih / 2) + 'px)';
+      if (t !== 'drop') {
+        el.classList.add('writing');
+        var bars = el.querySelectorAll('.gsi-anal .b');
+        bars[0].style.width = '100%'; bars[1].style.width = '70%';
+      }
+    });
+    status.innerHTML = '<b>Code</b> scores and assigns the tier; the <b style="color:var(--ink)">model</b> only writes the analysis.';
+  }
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) { renderStatic(); return; }
+
+  (async function run() {
+    var i = 0;
+    while (true) {
+      if (document.hidden) { await wait(500); continue; }
+      await cycle(items[i % items.length]);
+      i++;
+      await wait(520);
+    }
+  })();
+})();
+</script>
+
+</body>
+
 <footer class="site">
   <div class="wrap">
-    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
+    <span><a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
     <span>© 2026 Lucile Tranchant</span>
   </div>
 </footer>

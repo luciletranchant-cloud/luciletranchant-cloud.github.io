@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mirrorline — auditing what AI assistants say about an organization — Lucile Tranchant</title>
+<title>Mirrorline, auditing what AI assistants say about an organization, Lucile Tranchant</title>
 <meta name="description" content="R&D: structured probes to AI assistants about an organization, audited against the public record. The divergence between the record and the answers is the finding.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='4' width='8' height='8' fill='%23c23c22' transform='rotate(45 8 8)'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
 
@@ -22,6 +22,7 @@
     <nav class="site" aria-label="Site">
       <a href="/#work" aria-current="page">Work</a>
       <a href="/about/">About</a>
+      <a href="/resume.pdf">Résumé</a>
       <a href="/contact/">Contact</a>
     </nav>
   </div>
@@ -30,48 +31,167 @@
 <main>
   <div class="wrap">
 
-    <p class="eyebrow">Work — R&amp;D · In Development</p>
-    <h1>Mirrorline — auditing what AI assistants say about an organization</h1>
-    <p class="lede">When someone asks an AI assistant about an organization, the answer is a reputation surface almost nobody is monitoring. Mirrorline probes that surface and audits it against the public record.</p>
+    <p class="eyebrow">Work, R&amp;D · In Development · Mirrorline</p>
+    <h1>Auditing what AI assistants say about an organization</h1>
+    <p class="lede">When someone asks an AI assistant about an organization, the answer becomes part of its reputation surface. Yet few communications teams have a systematic way to examine how those answers vary, where they come from, or whether the underlying claims are supported.</p>
 
     <div class="section label-col">
       <p class="eyebrow" style="padding-top:4px;">The<br>problem</p>
       <div>
-        <p>A growing share of first impressions now happens inside AI assistants rather than on a search results page. Those answers are generated fresh, vary by model and phrasing, and can drift from what the documented record actually supports — an outdated fact, a confused entity, a claim with no visible source. Organizations monitor their press and their search results; the assistant layer mostly goes unwatched.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">The<br>method</p>
-      <div>
-        <p>Structured probes — the questions real people plausibly ask about an organization — are put to AI assistants, and the answers are captured and decomposed into individual claims. Each claim is then audited against the documented public record. <strong>The divergence is the finding:</strong> what the record says, what the assistants tell people, and where the two split.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">Provenance<br>discipline</p>
-      <div>
-        <p>Every claim in an answer gets a provenance classification: supported by an identifiable source, unsourced but consistent with the record, or unverifiable. The absence of a source is itself evidence — an assistant asserting something the record can't support is exactly the signal worth surfacing. The output is a reviewed brief built for a decision-maker, not a dashboard of scores.</p>
-      </div>
-    </div>
-
-    <div class="section label-col">
-      <p class="eyebrow" style="padding-top:4px;">Epistemic<br>honesty</p>
-      <div>
-        <p>A design principle carried over from my harmful-information work: the system produces <strong>signals for review, not determinations of truth.</strong> It does not promise control over what models say — nobody can honestly promise that — and it does not treat a divergence as a verdict. It flags, sources, and contextualises; judgment stays human. Designed to run in French and English.</p>
+        <p>A growing share of first impressions now happens inside AI assistants rather than on a search results page. Those answers are generated fresh, vary by model and phrasing, and can drift from what the record supports, an outdated fact, a confused entity, a claim with no source.</p>
+        <p>Organizations monitor their press and their search results. Few have a systematic way to examine the assistant layer.</p>
       </div>
     </div>
 
     <div class="section">
-      <p class="provenance">Personal project, in development · builds on the deterministic-gating and fail-closed patterns from the <a href="/case-study/">harmful-information pipelines</a> and the <a href="/work/digest-architecture/">executive-readout engine</a>. Engineering write-up only — this page describes an approach, not a service.</p>
+      <div class="section-head">
+        <span class="eyebrow">The method</span>
+        <span class="section-note">Watch a probe become a finding</span>
+      </div>
+      <div class="mirsim" aria-label="Animated flow: a probe is captured, decomposed into claims, and each claim audited against the record">
+        <div class="ms-head">
+          <span class="t">Probe → Capture → Decompose → Audit</span>
+          <span class="h">The divergence is the finding</span>
+        </div>
+        <div class="ms-stages">
+          <div class="ms-stage"><div class="num">01</div><div class="nm">Probe</div><div class="tick" aria-hidden="true"></div></div>
+          <div class="ms-stage"><div class="num">02</div><div class="nm">Capture</div><div class="tick" aria-hidden="true"></div></div>
+          <div class="ms-stage"><div class="num">03</div><div class="nm">Decompose</div><div class="tick" aria-hidden="true"></div></div>
+          <div class="ms-stage"><div class="num">04</div><div class="nm">Audit</div><div class="tick" aria-hidden="true"></div></div>
+        </div>
+        <div class="ms-body">
+          <div class="ms-answer">
+            <div class="ms-lab">Assistant</div>
+            <div class="ms-q">"Tell me about Northwind Renewables, what do they do, and how big are they?"</div>
+            <div class="ms-a">"Northwind Renewables, founded in 2009, operates the largest offshore wind farm in the North Sea."</div>
+          </div>
+          <div class="ms-claims2">
+            <div class="ms-lab">Claims vs. the record</div>
+            <div class="ms-claimrow"><span class="c">Operates offshore wind in the North Sea</span><span class="ms-chip sourced">Sourced</span></div>
+            <div class="ms-claimrow flag"><span class="c">Founded in 2009</span><span class="ms-chip unsourced">Unsourced</span></div>
+            <div class="ms-claimrow"><span class="c">Largest offshore wind farm in the North Sea</span><span class="ms-chip unverifiable">Unverifiable</span></div>
+          </div>
+        </div>
+        <div class="ms-status">A probe, a question real people ask an assistant.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Sample finding</span>
+        <span class="section-note">Fictional organization · structure real</span>
+      </div>
+      <div class="finding-card">
+        <div class="fc-head">
+          <div>
+            <div class="tag">Probe</div>
+            <div class="q">"Tell me about Northwind Renewables, what do they do and how big are they?"</div>
+          </div>
+          <div class="org">org: Northwind Renewables</div>
+        </div>
+        <div class="fc-body">
+          <div class="split">
+            <div class="assistant">
+              <div class="lab">What the assistant says</div>
+              <p class="txt">"Northwind Renewables, founded in 2009, operates the largest offshore wind farm in the North Sea."</p>
+            </div>
+            <div class="record">
+              <div class="lab" style="color:var(--accent);">What the record says</div>
+              <p class="txt">Public filings show incorporation in 2013. No project it operates ranks in the top ten by installed capacity.</p>
+            </div>
+          </div>
+          <div>
+            <div class="msec-label" style="margin-bottom:4px;">Claim-level provenance</div>
+            <div class="claims">
+              <div class="claim-line"><span class="ct">Operates offshore wind in the North Sea</span><span class="chip sourced">Sourced</span></div>
+              <div class="claim-line"><span class="ct">Founded in 2009</span><span class="chip unsourced">Unsourced</span></div>
+              <div class="claim-line"><span class="ct">Largest offshore wind farm in the North Sea</span><span class="chip unverifiable">Unverifiable</span></div>
+            </div>
+          </div>
+          <div class="prov-legend">
+            <span class="lg sourced"><span class="dot"></span>Sourced, backed by an identifiable record</span>
+            <span class="lg unsourced"><span class="dot"></span>Unsourced, asserted, contradicted or unbacked</span>
+            <span class="lg unverifiable"><span class="dot"></span>Unverifiable, no record can confirm or deny</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Provenance discipline</span>
+      </div>
+      <p style="font-size:14px;max-width:44em;margin-top:16px;"><strong>The absence of a source is itself evidence.</strong> An assistant asserting something the record can't support is exactly the signal worth surfacing. The output is a reviewed brief built for a decision-maker, not a dashboard of scores.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <span class="eyebrow">Epistemic honesty</span>
+      </div>
+      <blockquote class="rule" style="margin-top:18px;">
+        <p>"The system produces signals for review, not determinations of truth. It flags, sources, and contextualises; judgment stays human."</p>
+        <cite>,  a divergence is not a verdict, and nobody can honestly promise control over what models say. Designed to run in French and English.</cite>
+      </blockquote>
+    </div>
+
+    <div class="section">
+      <p class="provenance">Personal project, in development · builds on the deterministic-gating and fail-closed patterns from the <a href="/case-study/">harmful-information pipelines</a> and the <a href="/work/digest-architecture/">executive-readout engine</a>. Engineering write-up only, this page describes an approach, not a service.</p>
+      <p class="closing">Interested in the thinking behind this approach? A walkthrough is available on request. <a href="mailto:lucile.tranchant@gmail.com">Get in touch →</a></p>
     </div>
 
   </div>
 </main>
 
+<script>
+(function () {
+  var root = document.querySelector('.mirsim');
+  if (!root) return;
+  var stages = [].slice.call(root.querySelectorAll('.ms-stage'));
+  var q = root.querySelector('.ms-q'), a = root.querySelector('.ms-a');
+  var rows = [].slice.call(root.querySelectorAll('.ms-claimrow'));
+  var status = root.querySelector('.ms-status');
+  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  function stage(i) { stages.forEach(function (s, j) { s.classList.toggle('on', j === i); s.classList.toggle('done', j < i); }); }
+  function reset() { stage(-1); q.classList.remove('on'); a.classList.remove('on'); rows.forEach(function (r) { r.classList.remove('on'); r.querySelector('.ms-chip').classList.remove('show'); }); }
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    stage(3); q.classList.add('on'); a.classList.add('on');
+    rows.forEach(function (r) { r.classList.add('on'); r.querySelector('.ms-chip').classList.add('show'); });
+    status.innerHTML = 'Each claim is checked against the record; the <b>divergence</b> is the finding.';
+    return;
+  }
+
+  (async function run() {
+    while (true) {
+      if (document.hidden) { await wait(500); continue; }
+      reset(); await wait(450);
+      stage(0); q.classList.add('on');
+      status.innerHTML = 'A <b style="color:var(--ink)">probe</b>, a question real people ask an assistant.';
+      await wait(1700);
+      stage(1); a.classList.add('on');
+      status.innerHTML = 'The answer is <b style="color:var(--ink)">captured</b> verbatim, model and phrasing recorded.';
+      await wait(1900);
+      stage(2);
+      status.innerHTML = 'The answer is <b style="color:var(--ink)">decomposed</b> into individual, checkable claims.';
+      for (var k = 0; k < rows.length; k++) { rows[k].classList.add('on'); await wait(540); }
+      await wait(500);
+      stage(3);
+      status.innerHTML = 'Each claim is <b style="color:var(--ink)">audited</b> against the public record…';
+      for (var m = 0; m < rows.length; m++) { rows[m].querySelector('.ms-chip').classList.add('show'); await wait(720); }
+      await wait(450);
+      status.innerHTML = 'The <b>divergence</b> is the finding, "founded 2009" has no source.';
+      await wait(2700);
+    }
+  })();
+})();
+</script>
+
+</body>
+
 <footer class="site">
   <div class="wrap">
-    <span>Geneva, Switzerland · <a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
+    <span><a href="mailto:lucile.tranchant@gmail.com">lucile.tranchant@gmail.com</a> · <a href="https://www.linkedin.com/in/luciletranchant" rel="me">LinkedIn</a></span>
     <span>© 2026 Lucile Tranchant</span>
   </div>
 </footer>
